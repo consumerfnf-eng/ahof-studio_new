@@ -185,6 +185,37 @@
   .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
   @media(max-width:760px) { .gallery-grid { grid-template-columns:repeat(2,1fr); } }
   @media(max-width:480px) { .gallery-grid { grid-template-columns:1fr; } }
+  .gal-filter-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:14px; padding:10px 14px; background:var(--surface); border:1px solid var(--border); border-radius:6px; }
+  .gal-fc { padding:5px 11px; font-size:10px; border:1px solid var(--border); background:#fff; color:var(--text-mid); border-radius:3px; cursor:pointer; font-family:'DM Mono',monospace; letter-spacing:0.05em; }
+  .gal-fc:hover { background:var(--surface2); }
+  .gal-fc.on { background:#111; color:#fff; border-color:#111; }
+
+  /* ── 9-Member Lookbook Board ── */
+  .lookbook-board { background:linear-gradient(135deg,#fff 0%,#fffcf2 100%); border:2px solid #d4af37; border-radius:10px; padding:18px 18px 14px; margin-bottom:20px; }
+  .lookbook-header { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:14px; flex-wrap:wrap; }
+  .lookbook-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:900; letter-spacing:-0.01em; }
+  .lookbook-sub { font-size:11px; color:var(--text-dim); font-family:'Noto Sans KR',sans-serif; line-height:1.55; margin-top:4px; }
+  .lookbook-actions { display:flex; gap:6px; flex-wrap:wrap; }
+  .lookbook-grid { display:grid; grid-template-columns:repeat(9,1fr); gap:8px; }
+  @media(max-width:900px) { .lookbook-grid { grid-template-columns:repeat(5,1fr); } }
+  @media(max-width:500px) { .lookbook-grid { grid-template-columns:repeat(3,1fr); } }
+  .lookbook-slot { position:relative; border:2px dashed var(--border); border-radius:6px; aspect-ratio:3/4; background:#fafaf8; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; overflow:hidden; transition:all 0.15s; }
+  .lookbook-slot.filled { border-style:solid; border-color:#111; background:#fff; }
+  .lookbook-slot.drag-over { border-color:#d4af37; background:#fffaeb; border-style:solid; box-shadow:0 0 0 3px rgba(212,175,55,0.3); }
+  .lookbook-slot .lb-num { position:absolute; top:4px; left:4px; background:rgba(0,0,0,0.75); color:#fff; font-size:8px; font-weight:700; padding:2px 5px; border-radius:2px; letter-spacing:0.05em; z-index:2; }
+  .lookbook-slot .lb-emoji { font-size:20px; opacity:0.3; }
+  .lookbook-slot .lb-name { font-size:9px; color:var(--text-dim); font-family:'Noto Sans KR',sans-serif; text-align:center; padding:0 4px; }
+  .lookbook-slot .lb-name-bar { position:absolute; bottom:0; left:0; right:0; padding:4px 6px; background:rgba(0,0,0,0.75); color:#fff; font-size:9px; text-align:center; font-family:'Noto Sans KR',sans-serif; letter-spacing:0.03em; z-index:2; }
+  .lookbook-slot img { width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; }
+  .lookbook-slot .lb-del { position:absolute; top:4px; right:4px; width:20px; height:20px; background:rgba(220,38,38,0.9); border:none; border-radius:50%; color:#fff; font-size:11px; line-height:20px; text-align:center; cursor:pointer; opacity:0; transition:opacity 0.15s; z-index:3; }
+  .lookbook-slot:hover .lb-del { opacity:1; }
+  .lookbook-slot .lb-del:hover { background:#dc2626; }
+  .lookbook-hint { font-size:10px; color:var(--text-mid); font-family:'Noto Sans KR',sans-serif; padding:8px 10px; background:rgba(212,175,55,0.1); border-radius:4px; margin-bottom:10px; line-height:1.5; }
+
+  /* Draggable gallery cards */
+  .gal-card { cursor:grab; }
+  .gal-card:active { cursor:grabbing; }
+  .gal-card.dragging { opacity:0.5; }
   .gal-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; display:flex; flex-direction:column; transition:all 0.15s; }
   .gal-card:hover { border-color:#999; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
   .gal-img-wrap { aspect-ratio:3/4; background:var(--surface2); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; }
@@ -358,15 +389,15 @@ if (checkSavedAuth() || checkSessionAuth()) {
 <script>
 // ── AHOF 9 members (실제 멤버명에 맞춰 자유롭게 수정 가능 — UI에서 실시간 변경됨)
 const BRANDS = {
-  m1: { name:'Member 1', color:'#d4af37', desc:'멤버 1번 슬롯' },
-  m2: { name:'Member 2', color:'#e07b39', desc:'멤버 2번 슬롯' },
-  m3: { name:'Member 3', color:'#a3b18a', desc:'멤버 3번 슬롯' },
-  m4: { name:'Member 4', color:'#5a7d9a', desc:'멤버 4번 슬롯' },
-  m5: { name:'Member 5', color:'#b8627d', desc:'멤버 5번 슬롯' },
-  m6: { name:'Member 6', color:'#7d5ba6', desc:'멤버 6번 슬롯' },
-  m7: { name:'Member 7', color:'#3a7d7d', desc:'멤버 7번 슬롯' },
-  m8: { name:'Member 8', color:'#c04848', desc:'멤버 8번 슬롯' },
-  m9: { name:'Member 9', color:'#2c3e50', desc:'멤버 9번 슬롯' },
+  m1: { name:'스티븐',     color:'#d4af37', desc:'Steven' },
+  m2: { name:'서정우',     color:'#e07b39', desc:'Jeongwoo' },
+  m3: { name:'차웅기',     color:'#a3b18a', desc:'Woongki' },
+  m4: { name:'장슈아이보', color:'#5a7d9a', desc:'Shuaibo' },
+  m5: { name:'박한',       color:'#b8627d', desc:'Han' },
+  m6: { name:'제이엘',     color:'#7d5ba6', desc:'JL' },
+  m7: { name:'박주원',     color:'#3a7d7d', desc:'Juwon' },
+  m8: { name:'즈언',       color:'#c04848', desc:'Chih En' },
+  m9: { name:'다이스케',   color:'#2c3e50', desc:'Daisuke' },
 };
 
 // 6 outfit slots: 상의 / 하의 / 아우터 / 신발 / 모자 / 풀룩(원피스/세트)
@@ -386,13 +417,13 @@ Object.keys(BRANDS).forEach(b => {
     outfits:{ top:null, bottom:null, outer:null, shoes:null, hat:null, full:null },
     accessories:[], // [{base64, mime, thumb}]
     poseRef:null,
-    mod:{ sil:'none',fab:'none',gls:'none',col:'none',clr:'none',trans:0,wgt:'none',
-          hatStyle:'none', shoeStyle:'none', accNote:'none' },
+    mod:{ pantFit:'none', topFit:'none', outerStyle:'none', hatStyle:'none', hairColor:'none', extras:[] },
     pose:'looking directly at camera, slight 3/4 body angle, full body shot, hands relaxed at sides',
     bg:'studio plain white background, clean white wall',
-    light:'soft diffused lighting, slightly grainy film texture',
+    light:'soft diffused lighting, slightly grainy 35mm film texture',
     aspectRatio:'3:4',
-    faceStrength:'medium',  // low/medium/high/extreme
+    framing:'fullbody',     // fullbody | upper
+    faceStrength:'medium',
     modOn:false,
     result:null
   };
@@ -425,6 +456,20 @@ function buildUI() {
   const divider = document.createElement('div');
   divider.className = 'tab-divider';
   tabs.appendChild(divider);
+
+  // Special tab: 마스터 스튜디오 (Master Studio)
+  const masterTab = document.createElement('button');
+  masterTab.className = 'brand-tab special';
+  masterTab.id = 'tab-_master';
+  masterTab.onclick = () => switchBrand('_master');
+  masterTab.innerHTML = `<span class="midx">🎨</span>마스터 스튜디오`;
+  tabs.appendChild(masterTab);
+
+  const masterPanel = document.createElement('div');
+  masterPanel.className = 'brand-panel';
+  masterPanel.id = 'panel-_master';
+  masterPanel.innerHTML = masterStudioPanelHTML();
+  panels.appendChild(masterPanel);
 
   // Special tab: 갤러리 (Gallery)
   const galTab = document.createElement('button');
@@ -511,7 +556,9 @@ function panelHTML(b, br) {
 
   <div class="section">
     <div class="section-title">👔 착장 슬롯 <span class="badge bnew">상의·하의·아우터·신발·모자·풀룩</span></div>
-    <div style="font-size:10px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;margin-bottom:10px;">필요한 슬롯만 채워도 OK · 풀룩(원피스/세트)을 쓰면 상의·하의는 비워두세요 · 각 슬롯의 <strong style="color:#92680a;">⚙ 전체 적용</strong> 버튼으로 9명에게 한 번에 분배</div>
+    <div style="font-size:10px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;margin-bottom:10px;line-height:1.6;">
+      필요한 슬롯만 채워도 OK · 빈 슬롯은 출력에서도 비어있게 처리됩니다 · 풀룩(원피스/세트)을 쓰면 상의·하의는 비워두세요 · 각 슬롯의 <strong style="color:#92680a;">⚙ 전체 적용</strong> 버튼으로 9명에게 한 번에 분배
+    </div>
     <div class="outfit-grid-6">${slotHTML}</div>
     <div class="outfit-bulk-row">
       <div class="outfit-bulk-info">📦 채워진 모든 슬롯을 9명 멤버 전체에게 한 번에 복사</div>
@@ -534,146 +581,109 @@ function panelHTML(b, br) {
   </div>
 
   <div class="section">
-    <div class="section-title">🔧 스타일링 옵션 <span class="badge bmod" style="margin-left:auto;">선택 안 하면 이미지 그대로</span></div>
+    <div class="section-title">🎤 아이돌 스타일링 옵션 <span class="badge bmod" style="margin-left:auto;">선택 안 하면 이미지 그대로</span></div>
     <div class="mod-wrap">
       <div class="mod-bar" id="${b}-mbar" onclick="toggleMod('${b}')">
         <label class="sw" onclick="event.stopPropagation()"><input type="checkbox" id="${b}-mcb" onchange="toggleMod('${b}')"><span class="swsl"></span></label>
-        <span class="mtl">스타일링 옵션 켜기</span>
-        <span class="mth">핏 · 소재 · 컬러 · 모자 · 신발</span>
+        <span class="mtl">아이돌 스타일링 옵션 켜기</span>
+        <span class="mth">바지핏 · 모자각도 · 어깨노출 · 헤어컬러</span>
       </div>
       <div class="mod-body" id="${b}-mbody">
 
+        <!-- 바지 핏 -->
         <div class="mparam">
-          <span class="mptitle">실루엣 / 핏 <span class="mphint">상의·아우터에 적용</span></span>
-          <div class="tg" id="${b}-sil">
-            <button class="tb ns on" onclick="sm('${b}','sil','none',this)">변경 없음</button>
-            <button class="tb" onclick="sm('${b}','sil','extremely oversized, very boxy drop shoulder, extremely roomy',this)">슈퍼 오버</button>
-            <button class="tb" onclick="sm('${b}','sil','oversized drop shoulder, boxy and roomy',this)">오버사이즈</button>
-            <button class="tb" onclick="sm('${b}','sil','structured semi-oversize, slightly relaxed shoulder',this)">세미오버</button>
-            <button class="tb" onclick="sm('${b}','sil','relaxed regular fit, comfortable standard fit',this)">레귤러</button>
-            <button class="tb" onclick="sm('${b}','sil','slim fit, close to body, fitted silhouette',this)">슬림핏</button>
-            <button class="tb" onclick="sm('${b}','sil','very tight body-hugging fit, second skin silhouette',this)">바디핏</button>
-            <button class="tb" onclick="sm('${b}','sil','clean tailored fit, structured jacket shape',this)">테일러드</button>
-            <button class="tb" onclick="sm('${b}','sil','cropped shorter length, above hip',this)">크롭</button>
-            <button class="tb" onclick="sm('${b}','sil','longline extended length, below hip',this)">롱라인</button>
+          <span class="mptitle">👖 바지 핏</span>
+          <div class="tg" id="${b}-pantFit">
+            <button class="tb ns on" onclick="sm('${b}','pantFit','none',this)">변경 없음</button>
+            <button class="tb" onclick="sm('${b}','pantFit','baggy loose-fit pants, very wide leg, slouchy hip-hop silhouette dragging at the hem',this)">배기핏</button>
+            <button class="tb" onclick="sm('${b}','pantFit','wide leg pants, straight loose fit through the leg',this)">와이드</button>
+            <button class="tb" onclick="sm('${b}','pantFit','straight regular fit pants',this)">스트레이트</button>
+            <button class="tb" onclick="sm('${b}','pantFit','slim tapered pants, fitted at the ankle',this)">슬림 테이퍼드</button>
+            <button class="tb" onclick="sm('${b}','pantFit','skinny tight fit pants, very fitted to the leg',this)">스키니</button>
+            <button class="tb" onclick="sm('${b}','pantFit','low-rise sagging pants, hanging below the natural waist',this)">새깅</button>
+            <button class="tb" onclick="sm('${b}','pantFit','cargo pants with utility pockets, oversized military style',this)">카고</button>
+            <button class="tb" onclick="sm('${b}','pantFit','parachute pants with cinched ankles, billowy',this)">파라슈트</button>
           </div>
         </div>
 
+        <!-- 상의 핏 -->
         <div class="mparam">
-          <span class="mptitle">소재</span>
-          <div class="tg" id="${b}-fab">
-            <button class="tb ns on" onclick="sm('${b}','fab','none',this)">변경 없음</button>
-            <button class="tb" onclick="sm('${b}','fab','lightweight technical nylon, smooth performance fabric',this)">테크 나일론</button>
-            <button class="tb" onclick="sm('${b}','fab','soft stretch jersey, athletic performance fabric',this)">스트레치 저지</button>
-            <button class="tb" onclick="sm('${b}','fab','soft fleece fabric, brushed interior',this)">플리스</button>
-            <button class="tb" onclick="sm('${b}','fab','down quilted puffer fabric, quilted channels',this)">다운 퀼팅</button>
-            <button class="tb" onclick="sm('${b}','fab','cotton twill fabric, structured woven cotton',this)">코튼 트윌</button>
-            <button class="tb" onclick="sm('${b}','fab','wool blend fabric, premium heavyweight',this)">울 블렌드</button>
-            <button class="tb" onclick="sm('${b}','fab','suede fabric, soft napped surface',this)">스웨이드</button>
-            <button class="tb" onclick="sm('${b}','fab','leather, smooth or grain texture',this)">레더</button>
-            <button class="tb" onclick="sm('${b}','fab','denim fabric, woven indigo cotton',this)">데님</button>
-            <button class="tb" onclick="sm('${b}','fab','satin fabric, smooth lustrous surface',this)">새틴</button>
-            <button class="tb" onclick="sm('${b}','fab','sheer mesh fabric, see-through layered',this)">메쉬</button>
-            <button class="tb" onclick="sm('${b}','fab','knit fabric, ribbed or cable knit texture',this)">니트</button>
+          <span class="mptitle">👕 상의 핏</span>
+          <div class="tg" id="${b}-topFit">
+            <button class="tb ns on" onclick="sm('${b}','topFit','none',this)">변경 없음</button>
+            <button class="tb" onclick="sm('${b}','topFit','extremely oversized boxy top, drop shoulder, very roomy and loose',this)">슈퍼 오버</button>
+            <button class="tb" onclick="sm('${b}','topFit','oversized top, drop shoulder, roomy fit',this)">오버사이즈</button>
+            <button class="tb" onclick="sm('${b}','topFit','cropped top, hem above the navel showing midriff/torso',this)">크롭</button>
+            <button class="tb" onclick="sm('${b}','topFit','slim fit top, close to body',this)">슬림핏</button>
+            <button class="tb" onclick="sm('${b}','topFit','sleeveless cut-off tank, exposed arms and shoulders',this)">민소매</button>
           </div>
         </div>
 
+        <!-- 아우터 스타일 (어깨/오프숄더 등) -->
         <div class="mparam">
-          <span class="mptitle">광택</span>
-          <div class="tg" id="${b}-gls">
-            <button class="tb ns on" onclick="sm('${b}','gls','none',this)">변경 없음</button>
-            <button class="tb" onclick="sm('${b}','gls','completely matte finish, zero sheen, flat surface',this)">풀 매트</button>
-            <button class="tb" onclick="sm('${b}','gls','soft matte finish, very subtle surface texture',this)">소프트 매트</button>
-            <button class="tb" onclick="sm('${b}','gls','semi-matte finish, slight sheen on surface peaks only',this)">세미매트</button>
-            <button class="tb" onclick="sm('${b}','gls','semi-shiny finish, soft reflective sheen, satin-like',this)">세미샤이니</button>
-            <button class="tb" onclick="sm('${b}','gls','glossy shiny surface, clear reflective finish',this)">글로시</button>
-            <button class="tb" onclick="sm('${b}','gls','high gloss lacquer finish, mirror-like surface',this)">하이글로스</button>
+          <span class="mptitle">🧥 아우터 착용 방식 <span class="mphint">아우터가 있을 때만 적용</span></span>
+          <div class="tg" id="${b}-outerStyle">
+            <button class="tb ns on" onclick="sm('${b}','outerStyle','none',this)">변경 없음</button>
+            <button class="tb" onclick="sm('${b}','outerStyle','jacket hanging off ONE shoulder, the other shoulder fully exposed showing the inner top — off-shoulder jacket styling',this)">한쪽 어깨 노출</button>
+            <button class="tb" onclick="sm('${b}','outerStyle','jacket draped loosely over both shoulders without arms in the sleeves, like a cape',this)">케이프식 걸치기</button>
+            <button class="tb" onclick="sm('${b}','outerStyle','jacket tied around the waist, sleeves knotted at the front',this)">허리에 묶기</button>
+            <button class="tb" onclick="sm('${b}','outerStyle','jacket fully zipped/buttoned up, structured and tight',this)">풀 클로즈</button>
+            <button class="tb" onclick="sm('${b}','outerStyle','jacket fully open, unbuttoned, showing inner top clearly',this)">완전 오픈</button>
+            <button class="tb" onclick="sm('${b}','outerStyle','jacket with sleeves rolled up to the elbows',this)">소매 롤업</button>
+            <button class="tb" onclick="sm('${b}','outerStyle','jacket worn inside-out showing the lining',this)">뒤집어 입기</button>
+            <button class="tb" onclick="sm('${b}','outerStyle','jacket sleeves pushed up past the elbows, slouchy bunched fabric',this)">소매 끌어올림</button>
           </div>
         </div>
 
+        <!-- 모자 착용 방식 -->
         <div class="mparam">
-          <span class="mptitle">칼라 / 넥</span>
-          <div class="tg" id="${b}-col">
-            <button class="tb ns on" onclick="sm('${b}','col','none',this)">변경 없음</button>
-            <button class="tb" onclick="sm('${b}','col','add a hood',this)">후드 추가</button>
-            <button class="tb" onclick="sm('${b}','col','shirt collar',this)">셔츠칼라</button>
-            <button class="tb" onclick="sm('${b}','col','crew neck',this)">크루넥</button>
-            <button class="tb" onclick="sm('${b}','col','turtleneck high collar',this)">터틀넥</button>
-            <button class="tb" onclick="sm('${b}','col','v-neck',this)">브이넥</button>
-            <button class="tb" onclick="sm('${b}','col','remove collar, collarless',this)">칼라 제거</button>
-          </div>
-        </div>
-
-        <div class="mparam">
-          <span class="mptitle">투명도 <span class="mphint">0% 불투명 · 높을수록 비쳐보임</span></span>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:10px;color:#bbb;width:28px;">0%</span>
-            <input type="range" min="0" max="100" value="0" oninput="ssl('${b}','trans',this.value)" style="flex:1;">
-            <span style="font-size:10px;color:#bbb;width:34px;">100%</span>
-            <span style="font-size:13px;font-weight:600;min-width:36px;text-align:right;" id="${b}-tv">0%</span>
-          </div>
-        </div>
-
-        <div class="mparam">
-          <span class="mptitle">두께 / 무게감</span>
-          <div class="tg" id="${b}-wgt">
-            <button class="tb ns on" onclick="sm('${b}','wgt','none',this)">변경 없음</button>
-            <button class="tb" onclick="sm('${b}','wgt','ultralight, airy and weightless fabric, tissue-thin shell',this)">울트라라이트</button>
-            <button class="tb" onclick="sm('${b}','wgt','lightweight technical fabric, soft and fluid drape',this)">라이트</button>
-            <button class="tb" onclick="sm('${b}','wgt','medium weight fabric, balanced structure and drape',this)">미디엄</button>
-            <button class="tb" onclick="sm('${b}','wgt','heavy fabric, dense and substantial weight',this)">헤비</button>
-            <button class="tb" onclick="sm('${b}','wgt','extremely heavy and dense, very thick and stiff',this)">슈퍼헤비</button>
-          </div>
-        </div>
-
-        <div class="mparam">
-          <span class="mptitle">컬러 <span class="mphint">착장 컬러 일괄 변경</span></span>
-          <div class="tg" id="${b}-clr">
-            <button class="tb ns on" onclick="sm('${b}','clr','none',this)">변경 없음</button>
-            <button class="tb" onclick="sm('${b}','clr','navy blue',this)">Navy</button>
-            <button class="tb" onclick="sm('${b}','clr','black',this)">Black</button>
-            <button class="tb" onclick="sm('${b}','clr','charcoal gray',this)">Charcoal</button>
-            <button class="tb" onclick="sm('${b}','clr','cream white',this)">Cream</button>
-            <button class="tb" onclick="sm('${b}','clr','camel brown',this)">Camel</button>
-            <button class="tb" onclick="sm('${b}','clr','olive green',this)">Olive</button>
-            <button class="tb" onclick="sm('${b}','clr','burgundy red',this)">Burgundy</button>
-            <button class="tb" onclick="sm('${b}','clr','pure white',this)">White</button>
-            <button class="tb" onclick="sm('${b}','clr','pastel pink',this)">Pink</button>
-            <button class="tb" onclick="sm('${b}','clr','sky blue',this)">Sky Blue</button>
-          </div>
-        </div>
-
-        <!-- NEW: HAT STYLE -->
-        <div class="mparam">
-          <span class="mptitle">🧢 모자 스타일 <span class="mphint">모자 슬롯에 이미지가 없을 때만 적용</span></span>
+          <span class="mptitle">🧢 모자 착용 방식 <span class="mphint">모자가 있을 때만 적용</span></span>
           <div class="tg" id="${b}-hatStyle">
             <button class="tb ns on" onclick="sm('${b}','hatStyle','none',this)">변경 없음</button>
-            <button class="tb" onclick="sm('${b}','hatStyle','curved-brim baseball cap, snug fit, worn slightly low on the forehead',this)">볼캡</button>
-            <button class="tb" onclick="sm('${b}','hatStyle','flat-brim snapback cap, hip-hop style',this)">스냅백</button>
-            <button class="tb" onclick="sm('${b}','hatStyle','knit beanie, soft slouchy fit',this)">비니</button>
-            <button class="tb" onclick="sm('${b}','hatStyle','bucket hat, soft brim around the head',this)">버킷햇</button>
-            <button class="tb" onclick="sm('${b}','hatStyle','wide-brim fedora hat, structured felt',this)">페도라</button>
-            <button class="tb" onclick="sm('${b}','hatStyle','newsboy cap, classic 8-panel design',this)">뉴스보이</button>
-            <button class="tb" onclick="sm('${b}','hatStyle','beret, soft round wool',this)">베레모</button>
-            <button class="tb" onclick="sm('${b}','hatStyle','straw sun hat, natural woven texture',this)">스트로햇</button>
+            <button class="tb" onclick="sm('${b}','hatStyle','cap worn backwards, brim facing the back of the head',this)">거꾸로</button>
+            <button class="tb" onclick="sm('${b}','hatStyle','cap worn sideways, brim tilted 90 degrees to one side',this)">옆으로</button>
+            <button class="tb" onclick="sm('${b}','hatStyle','cap worn low on the forehead, brim shadowing the eyes',this)">눌러쓰기</button>
+            <button class="tb" onclick="sm('${b}','hatStyle','cap pushed up high on the head, exposing forehead and bangs',this)">위로 올려쓰기</button>
+            <button class="tb" onclick="sm('${b}','hatStyle','cap brim flat and straight, hip-hop style with the sticker tag still on',this)">스티커 부착</button>
+            <button class="tb" onclick="sm('${b}','hatStyle','beanie worn loose and slouchy, slightly hanging back from the crown',this)">비니 슬라우치</button>
+            <button class="tb" onclick="sm('${b}','hatStyle','hat worn over a hood, layered headwear styling',this)">후드 위에</button>
           </div>
         </div>
 
-        <!-- NEW: SHOE STYLE -->
+        <!-- 헤어 컬러 -->
         <div class="mparam">
-          <span class="mptitle">👟 신발 스타일 <span class="mphint">신발 슬롯에 이미지가 없을 때만 적용</span></span>
-          <div class="tg" id="${b}-shoeStyle">
-            <button class="tb ns on" onclick="sm('${b}','shoeStyle','none',this)">변경 없음</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','chunky retro sneakers, dad-shoe silhouette',this)">청키 스니커즈</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','classic low-top sneakers, minimal clean white',this)">클래식 스니커즈</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','high-top sneakers, basketball style',this)">하이탑</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','combat boots, lace-up chunky boots, leather',this)">컴뱃 부츠</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','chelsea boots, sleek leather ankle boots',this)">첼시 부츠</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','loafers, classic leather slip-on',this)">로퍼</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','dress oxford shoes, polished formal leather',this)">옥스포드</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','platform Mary Janes, glossy black leather',this)">메리제인</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','strappy heeled sandals, elegant stiletto',this)">힐 샌들</button>
-            <button class="tb" onclick="sm('${b}','shoeStyle','sport sandals, chunky velcro straps',this)">스포츠 샌들</button>
+          <span class="mptitle">💇 헤어 컬러 <span class="mphint">머리색만 변경 · 헤어스타일은 유지</span></span>
+          <div class="tg" id="${b}-hairColor">
+            <button class="tb ns on" onclick="sm('${b}','hairColor','none',this)">변경 없음</button>
+            <button class="tb" onclick="sm('${b}','hairColor','jet black natural hair color',this)">블랙</button>
+            <button class="tb" onclick="sm('${b}','hairColor','dark chocolate brown hair',this)">다크 브라운</button>
+            <button class="tb" onclick="sm('${b}','hairColor','warm milk tea brown hair color',this)">밀크티</button>
+            <button class="tb" onclick="sm('${b}','hairColor','platinum blonde hair, very light almost silver',this)">플래티넘 블론드</button>
+            <button class="tb" onclick="sm('${b}','hairColor','ash gray silver hair color, cool toned',this)">애쉬 그레이</button>
+            <button class="tb" onclick="sm('${b}','hairColor','soft pink pastel hair color',this)">파스텔 핑크</button>
+            <button class="tb" onclick="sm('${b}','hairColor','ice blue pastel hair color',this)">아이스 블루</button>
+            <button class="tb" onclick="sm('${b}','hairColor','vibrant cherry red hair color',this)">레드</button>
+            <button class="tb" onclick="sm('${b}','hairColor','copper orange ginger hair color',this)">오렌지</button>
+            <button class="tb" onclick="sm('${b}','hairColor','two-tone hair with dark roots and bleached highlights',this)">투톤 (다크+하이라이트)</button>
+            <button class="tb" onclick="sm('${b}','hairColor','bleached blonde with dark roots showing',this)">뿌리염 (다크+블론드)</button>
+          </div>
+        </div>
+
+        <!-- 디테일 추가 (멀티 토글) -->
+        <div class="mparam">
+          <span class="mptitle">✨ 디테일 추가 <span class="mphint">여러 개 선택 가능</span></span>
+          <div class="tg" id="${b}-extras">
+            <button class="tb" onclick="toggleExtra('${b}','tucked','top tucked into pants at the front, hem visible at the waistband',this)">앞만 인턱</button>
+            <button class="tb" onclick="toggleExtra('${b}','untucked','top fully untucked, hanging loose over the waistband',this)">전체 아웃</button>
+            <button class="tb" onclick="toggleExtra('${b}','sleeves-rolled','shirt sleeves rolled up to the forearms',this)">소매 롤업</button>
+            <button class="tb" onclick="toggleExtra('${b}','belt-visible','statement belt visible at the waist',this)">벨트 강조</button>
+            <button class="tb" onclick="toggleExtra('${b}','chain-stack','multiple silver chains stacked around the neck',this)">체인 스택</button>
+            <button class="tb" onclick="toggleExtra('${b}','rings','multiple rings on the fingers, stacked jewelry',this)">반지 스택</button>
+            <button class="tb" onclick="toggleExtra('${b}','earring','single statement earring or stacked earrings on visible ear',this)">이어링</button>
+            <button class="tb" onclick="toggleExtra('${b}','socks-up','knee-high socks pulled up over the calves',this)">하이삭스</button>
+            <button class="tb" onclick="toggleExtra('${b}','laces-loose','sneaker laces loose or untied, casual styling',this)">신발끈 풀어서</button>
+            <button class="tb" onclick="toggleExtra('${b}','headphones','large over-ear headphones around the neck or head',this)">헤드폰</button>
+            <button class="tb" onclick="toggleExtra('${b}','sunglass-pushed','sunglasses pushed up onto the top of the head',this)">선글라스 머리 위</button>
           </div>
         </div>
 
@@ -682,19 +692,13 @@ function panelHTML(b, br) {
   </div>
 
   <div class="section">
-    <div class="section-title">📐 출력 비율 <span class="badge bnew" style="margin-left:auto;">얼굴 보존에 매우 중요</span></div>
+    <div class="section-title">📐 출력 비율 <span class="badge bnew" style="margin-left:auto;">3:4 세로 고정 · 풀바디/상반신만</span></div>
     <div style="font-size:10px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;margin-bottom:10px;line-height:1.5;">
-      <strong style="color:#92680a;">⚠ 가로로 긴 비율은 얼굴 영역이 작아져 다른 얼굴로 생성될 수 있어요</strong> · 인물 사진은 세로 비율(3:4 / 2:3 / 9:16) 권장
+      얼굴 보존을 위해 3:4 세로 비율로 고정 · 프레이밍만 선택 가능
     </div>
-    <div class="pose-grid" id="${b}-argrid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr));">
-      <button class="pb" onclick="sar('${b}',this,'9:16')"><span class="pi">📱</span><span class="pn">9:16 세로</span><span class="pd">SNS·풀바디 추천</span></button>
-      <button class="pb" onclick="sar('${b}',this,'2:3')"><span class="pi">🖼</span><span class="pn">2:3 풀바디</span><span class="pd">전신샷 표준</span></button>
-      <button class="pb on" onclick="sar('${b}',this,'3:4')"><span class="pi">⭐</span><span class="pn">3:4 인물</span><span class="pd">상반신·얼굴 추천</span></button>
-      <button class="pb" onclick="sar('${b}',this,'4:5')"><span class="pi">📸</span><span class="pn">4:5 포트레이트</span><span class="pd">인스타 피드</span></button>
-      <button class="pb" onclick="sar('${b}',this,'1:1')"><span class="pi">⬛</span><span class="pn">1:1 정사각</span><span class="pd">프로필 사진</span></button>
-      <button class="pb" onclick="sar('${b}',this,'4:3')"><span class="pi">🟦</span><span class="pn">4:3 가로</span><span class="pd">상반신 가로</span></button>
-      <button class="pb" onclick="sar('${b}',this,'3:2')"><span class="pi">📷</span><span class="pn">3:2 가로</span><span class="pd">DSLR 표준</span></button>
-      <button class="pb" onclick="sar('${b}',this,'16:9')"><span class="pi">🎬</span><span class="pn">16:9 와이드</span><span class="pd">⚠ 얼굴 작아짐</span></button>
+    <div class="pose-grid" id="${b}-argrid" style="grid-template-columns:repeat(2,1fr);">
+      <button class="pb on" onclick="sar('${b}',this,'3:4','fullbody')"><span class="pi">🧍</span><span class="pn">3:4 풀바디</span><span class="pd">전신샷</span></button>
+      <button class="pb" onclick="sar('${b}',this,'3:4','upper')"><span class="pi">📷</span><span class="pn">3:4 상반신</span><span class="pd">상체 클로즈업</span></button>
     </div>
   </div>
 
@@ -731,71 +735,33 @@ function panelHTML(b, br) {
   </div>
 
   <div class="section">
-    <div class="section-title">🌅 배경 &amp; 조명</div>
-    <span class="sl">배경</span>
-    <div class="pose-grid" id="${b}-bgrid" style="grid-template-columns:repeat(auto-fill,minmax(100px,1fr));margin-bottom:12px;">
+    <div class="section-title">🌅 배경 <span style="margin-left:auto;font-size:9px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;">조명은 필름 그레인 고정</span></div>
+    <div class="pose-grid" id="${b}-bgrid" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px;">
       <button class="pb on" onclick="sbg('${b}',this,'studio plain white background, clean white wall')"><span class="pi">⬜</span><span class="pn">화이트</span></button>
-      <button class="pb" onclick="sbg('${b}',this,'warm beige studio background, soft cream wall')"><span class="pi">🟫</span><span class="pn">웜 베이지</span></button>
-      <button class="pb" onclick="sbg('${b}',this,'light gray studio background, neutral')"><span class="pi">🔲</span><span class="pn">라이트 그레이</span></button>
+      <button class="pb" onclick="sbg('${b}',this,'light gray studio background, neutral seamless')"><span class="pi">🔲</span><span class="pn">라이트 그레이</span></button>
       <button class="pb" onclick="sbg('${b}',this,'dark charcoal background, moody studio')"><span class="pi">⬛</span><span class="pn">다크</span></button>
-      <button class="pb" onclick="sbg('${b}',this,'pastel pink studio background, soft dreamy')"><span class="pi">🌸</span><span class="pn">파스텔 핑크</span></button>
-      <button class="pb" onclick="sbg('${b}',this,'outdoor urban street, city building, daylight')"><span class="pi">🏙</span><span class="pn">어반</span></button>
-      <button class="pb" onclick="sbg('${b}',this,'minimal luxury interior, marble floor, showroom')"><span class="pi">🏛</span><span class="pn">럭셔리</span></button>
-      <button class="pb" onclick="sbg('${b}',this,'kpop concept set, neon and abstract shapes, futuristic')"><span class="pi">💫</span><span class="pn">K-pop 콘셉트</span></button>
-      <button class="pb" onclick="sbg('${b}',this,'outdoor park, soft green nature, golden hour')"><span class="pi">🌿</span><span class="pn">네이처</span></button>
     </div>
-    <span class="sl">조명</span>
-    <div class="pose-grid" id="${b}-lgrd2" style="grid-template-columns:repeat(auto-fill,minmax(100px,1fr));margin-bottom:12px;">
-      <button class="pb on" onclick="slt('${b}',this,'soft diffused lighting, slightly grainy film texture')"><span class="pi">🎞</span><span class="pn">필름 그레인</span></button>
-      <button class="pb" onclick="slt('${b}',this,'clean sharp studio lighting, professional fashion lighting')"><span class="pi">💡</span><span class="pn">클린</span></button>
-      <button class="pb" onclick="slt('${b}',this,'warm golden hour lighting, soft warm sunlight')"><span class="pi">🌇</span><span class="pn">골든아워</span></button>
-      <button class="pb" onclick="slt('${b}',this,'natural window light, soft diffused daylight from side')"><span class="pi">🪟</span><span class="pn">창문 자연광</span></button>
-      <button class="pb" onclick="slt('${b}',this,'dramatic side lighting, strong contrast, editorial moody')"><span class="pi">🎭</span><span class="pn">드라마틱</span></button>
-      <button class="pb" onclick="slt('${b}',this,'idol stage lighting, vibrant colored gels, cinematic')"><span class="pi">🎤</span><span class="pn">스테이지</span></button>
-      <button class="pb" onclick="slt('${b}',this,'overcast flat lighting, even soft light')"><span class="pi">☁️</span><span class="pn">플랫</span></button>
-    </div>
-    <span class="sl">추가 메모</span>
-    <textarea class="xi" id="${b}-extra" placeholder="예: cinematic lens flare, magazine editorial, full body shot, group concept photo style..."></textarea>
+    <span class="sl">추가 메모 <span class="mphint">선택사항</span></span>
+    <textarea class="xi" id="${b}-extra" placeholder="예: 매거진 컨셉, 그룹 콘셉트 포토 스타일..."></textarea>
   </div>
 
   <div class="section" style="border:2px solid #fecaca;background:#fff9f9;">
-    <div class="section-title">⭐ 얼굴 보존 강화 코멘트
-      <span class="badge bnew" style="margin-left:auto;background:#fee2e2;color:#991b1b;border-color:#fecaca;">최우선 적용</span>
+    <div class="section-title">⭐ 얼굴 보존 강도
+      <span class="badge bnew" style="margin-left:auto;background:#fee2e2;color:#991b1b;border-color:#fecaca;">정체성 우선순위</span>
     </div>
     <div style="font-size:11px;color:#991b1b;font-family:'Noto Sans KR',sans-serif;margin-bottom:10px;line-height:1.5;">
-      얼굴이 다르게 나올 때 직접 디테일을 지정해주세요 · 프롬프트 <strong>최상단</strong>에 주입돼 가장 강하게 적용됩니다 · 사진 보면서 특징을 구체적으로 써주는 게 가장 효과적이에요
+      얼굴이 다른 얼굴로 나올 때 강도를 올려보세요 · 모든 단계에서 한국·중국·일본·대만계 남자 K-pop 아이돌 락이 자동 적용됩니다
+    </div>
+    <div class="tg" id="${b}-fstrength">
+      <button class="tb" onclick="setFs('${b}','low',this)">약</button>
+      <button class="tb on" onclick="setFs('${b}','medium',this)">중 (기본)</button>
+      <button class="tb" onclick="setFs('${b}','high',this)">강</button>
+      <button class="tb" onclick="setFs('${b}','extreme',this)">최강 (옷보다 얼굴 우선)</button>
     </div>
 
-    <span class="sl" style="margin-bottom:6px;display:block;">자주 쓰는 표현 (클릭하면 자동 추가)</span>
-    <div class="tg" id="${b}-fpresets" style="margin-bottom:10px;">
-      <button class="tb" onclick="addFp('${b}','매우 또렷한 쌍꺼풀, 큰 눈, 검은색 눈동자')">또렷한 쌍꺼풀</button>
-      <button class="tb" onclick="addFp('${b}','홑꺼풀 또는 속쌍꺼풀, 길고 가는 눈')">홑꺼풀·속쌍꺼풀</button>
-      <button class="tb" onclick="addFp('${b}','갸름한 V라인 턱선, 좁고 뾰족한 턱')">V라인 턱</button>
-      <button class="tb" onclick="addFp('${b}','각진 사각턱, 넓은 광대')">각진 턱·광대</button>
-      <button class="tb" onclick="addFp('${b}','오똑한 콧대, 끝이 살짝 둥근 코')">오똑한 코</button>
-      <button class="tb" onclick="addFp('${b}','얇고 도톰한 입술, 활 모양')">활 모양 입술</button>
-      <button class="tb" onclick="addFp('${b}','두꺼운 입술, 다소 도톰한 하입술')">도톰한 입술</button>
-      <button class="tb" onclick="addFp('${b}','짙고 진한 일자 눈썹')">일자 눈썹</button>
-      <button class="tb" onclick="addFp('${b}','아치형 눈썹, 자연스러운 곡선')">아치 눈썹</button>
-      <button class="tb" onclick="addFp('${b}','검정색 모발, 시스루 앞머리, 어두운 머리색')">시스루 앞머리</button>
-      <button class="tb" onclick="addFp('${b}','갈색 톤 머리색, 자연스러운 펌')">갈색 펌</button>
-      <button class="tb" onclick="addFp('${b}','뽀얗고 흰 피부톤, 매끈한 피부')">흰 피부</button>
-      <button class="tb" onclick="addFp('${b}','건강한 구릿빛 피부톤')">구릿빛 피부</button>
-      <button class="tb" onclick="addFp('${b}','동안 외모, 어려 보이는 얼굴')">동안</button>
-      <button class="tb" onclick="addFp('${b}','성숙하고 날카로운 인상')">성숙·날카로운</button>
-      <button class="tb" onclick="addFp('${b}','부드럽고 친근한 인상')">부드러운</button>
-    </div>
-
-    <textarea class="xi" id="${b}-facenote" placeholder="예: 광대가 도드라지고 턱선이 갸름함, 쌍꺼풀이 또렷한 큰 눈, 오똑한 코, 얇고 윤곽이 분명한 입술, 검은색 시스루 앞머리, 살짝 처진 눈매..." style="min-height:80px;"></textarea>
-
-    <div style="margin-top:12px;">
-      <span class="sl" style="margin-bottom:6px;display:block;">얼굴 보존 강도 <span class="mphint">강할수록 정체성 우선 · 옷 적용 자유도는 살짝 감소</span></span>
-      <div class="tg" id="${b}-fstrength">
-        <button class="tb" onclick="setFs('${b}','low',this)">약</button>
-        <button class="tb on" onclick="setFs('${b}','medium',this)">중 (기본)</button>
-        <button class="tb" onclick="setFs('${b}','high',this)">강</button>
-        <button class="tb" onclick="setFs('${b}','extreme',this)">최강 (옷보다 얼굴 우선)</button>
-      </div>
+    <div style="margin-top:16px;">
+      <span class="sl" style="margin-bottom:6px;display:block;">👔 의상 관련 추가 코멘트 <span class="mphint">옷·실루엣·소재·디테일·스타일링 자유 메모</span></span>
+      <textarea class="xi" id="${b}-facenote" placeholder="예: 오버사이즈 핏으로, 셔츠는 안에 살짝 넣어서, 재킷 단추 다 풀고, 신발끈 풀어서, 운동화 양말 무릎까지 올려서..." style="min-height:90px;"></textarea>
     </div>
   </div>
 
@@ -816,9 +782,15 @@ function panelHTML(b, br) {
   </div>`;
 }
 
+// Original AHOF member names (used as fallback when user clears the field)
+const AHOF_DEFAULT_NAMES = {
+  m1:'스티븐', m2:'서정우', m3:'차웅기', m4:'장슈아이보', m5:'박한',
+  m6:'제이엘', m7:'박주원', m8:'즈언', m9:'다이스케'
+};
+
 // ── Member name update ────────────────────────
 function updateMemberName(b, val) {
-  const v = val.trim() || `Member ${Object.keys(BRANDS).indexOf(b)+1}`;
+  const v = val.trim() || AHOF_DEFAULT_NAMES[b] || `Member ${Object.keys(BRANDS).indexOf(b)+1}`;
   BRANDS[b].name = v;
   localStorage.setItem(`ahof_name_${b}`, v);
   document.getElementById(`tabname-${b}`).textContent = v;
@@ -834,10 +806,8 @@ function switchBrand(b) {
   document.getElementById(`panel-${b}`).classList.add('active');
   if (b === '_gallery') {
     renderGallery();
-    setTimeout(() => {
-      if (typeof initGroupShotChips === 'function') initGroupShotChips();
-      if (typeof updateGroupShotCount === 'function') updateGroupShotCount();
-    }, 50);
+  } else if (b === '_master') {
+    if (typeof renderMasterStudio === 'function') renderMasterStudio();
   }
 }
 
@@ -1133,28 +1103,29 @@ function ssl(b,k,v){
 
 function buildMod(b){
   const s=BS[b]; if(!s.modOn) return '';
-  const m=s.mod,parts=[];
-  if(m.sil!=='none') parts.push(`change silhouette/fit to: ${m.sil}`);
-  if(m.fab!=='none') parts.push(`change fabric to: ${m.fab}`);
-  if(m.gls!=='none') parts.push(`change surface finish to: ${m.gls}`);
-  if(m.col!=='none') parts.push(`collar/neckline change: ${m.col}`);
-  if(m.clr!=='none') parts.push(`change color to: ${m.clr}`);
-  if(m.trans>0) parts.push(`make fabric ${m.trans}% transparent/semi-sheer`);
-  if(m.wgt&&m.wgt!=='none') parts.push(`fabric weight/thickness: ${m.wgt}`);
-  // hat style applies only if no hat image uploaded
-  if(m.hatStyle && m.hatStyle!=='none' && !s.outfits.hat){
-    parts.push(`add hat: ${m.hatStyle}`);
+  const m=s.mod, parts=[];
+  if(m.pantFit && m.pantFit!=='none') parts.push(`pants fit/style: ${m.pantFit}`);
+  if(m.topFit && m.topFit!=='none') parts.push(`top fit/style: ${m.topFit}`);
+  if(m.outerStyle && m.outerStyle!=='none') parts.push(`outerwear styling: ${m.outerStyle}`);
+  if(m.hatStyle && m.hatStyle!=='none') parts.push(`hat worn this way: ${m.hatStyle}`);
+  if(m.hairColor && m.hairColor!=='none') parts.push(`hair color change ONLY (keep exact hairstyle/length/cut from reference): ${m.hairColor}`);
+  if(Array.isArray(m.extras) && m.extras.length){
+    parts.push('additional styling details: ' + m.extras.map(x=>x.desc).join('; '));
   }
-  // shoe style applies only if no shoe image uploaded
-  if(m.shoeStyle && m.shoeStyle!=='none' && !s.outfits.shoes){
-    parts.push(`add shoes: ${m.shoeStyle}`);
-  }
-  return parts.length?'\n\nSTYLING MODIFICATIONS:\n- '+parts.join('\n- '):'';
+  return parts.length ? '\n\n🎤 IDOL STYLING DIRECTIVES:\n- ' + parts.join('\n- ') : '';
+}
+
+// Multi-select extras toggle
+function toggleExtra(b, key, desc, btn){
+  const s=BS[b]; if(!Array.isArray(s.mod.extras)) s.mod.extras = [];
+  const idx = s.mod.extras.findIndex(x => x.key === key);
+  if (idx >= 0) { s.mod.extras.splice(idx,1); btn.classList.remove('on'); }
+  else { s.mod.extras.push({key, desc}); btn.classList.add('on'); }
 }
 
 // ── Pose/BG/Light ─────────────────────────────
 function sp(b,btn,v){document.querySelectorAll(`#${b}-pgrid .pb`).forEach(x=>x.classList.remove('on'));btn.classList.add('on');BS[b].pose=v;}
-function sar(b,btn,v){document.querySelectorAll(`#${b}-argrid .pb`).forEach(x=>x.classList.remove('on'));btn.classList.add('on');BS[b].aspectRatio=v;}
+function sar(b,btn,v,framing){document.querySelectorAll(`#${b}-argrid .pb`).forEach(x=>x.classList.remove('on'));btn.classList.add('on');BS[b].aspectRatio=v;BS[b].framing=framing||'fullbody';}
 
 // Append face preset text to the face-note textarea
 function addFp(b, txt) {
@@ -1235,16 +1206,19 @@ async function generate(b){
   const memberName = BRANDS[b].name;
 
   // Face preservation strength prefix — injected at the very top of the prompt
-  const strengthPrefix = {
+  // ALWAYS includes the K-pop male idol lock to prevent foreign-looking outputs
+  const KPOP_LOCK = '\n\n🇰🇷 SUBJECT TYPE LOCK (NON-NEGOTIABLE): The subject is a young East Asian male K-pop idol (Korean / Japanese / Taiwanese / Chinese), aged late teens to early twenties. Output MUST be a K-pop boy group idol look. STRICT REJECT criteria — the output is INVALID if the person appears: Caucasian / White / Western, African / Black, Latino / Hispanic, South Asian / Indian, Middle Eastern, female, or older than ~25. The face MUST clearly read as a contemporary East Asian male K-pop idol with smooth youthful skin, idol-style grooming, and idol-industry aesthetic standards. This rule overrides any tendency the model has to "diversify" or "neutralize" the face.';
+  const strengthPrefix = ({
     low: '',
     medium: '🔒 IDENTITY LOCK — MEDIUM: The person\'s identity (face, hair, body silhouette) must be preserved with high fidelity to the reference images.',
     high: '🔒🔒 IDENTITY LOCK — HIGH: Identity preservation is paramount. Face, hair, and body silhouette must match the reference images with near-perfect fidelity. If there is ANY conflict between styling instructions and identity preservation, identity ALWAYS wins.',
     extreme: '🔒🔒🔒 IDENTITY LOCK — EXTREME (highest priority over everything else): The output face MUST be visually indistinguishable from the reference. Treat this like a face-swap task where the face stays 100% locked and only clothing/accessories/background change. Reject any tendency to "improve" or "idealize" the face. The hair must be the EXACT same hairstyle, length, color, and texture. Any deviation from the reference identity is a FAILURE.'
-  }[faceStrength];
+  }[faceStrength]) + KPOP_LOCK;
 
   // User's custom face description note — injected at the very top
-  const userFaceLock = faceNote
-    ? `\n\n👤 USER-SPECIFIED IDENTITY DETAILS (HIGHEST PRIORITY — preserve these exact features):\n"${faceNote}"\nThese are the user-confirmed identity-defining features of "${memberName}". The output MUST exhibit ALL of these characteristics. This description has higher priority than any other styling instruction.`
+  // User's outfit comment — injected into the styling section, not identity
+  const userOutfitNote = faceNote
+    ? `\n\n👔 USER OUTFIT/STYLING NOTE (HIGH PRIORITY): "${faceNote}"\nApply this styling direction to the outfit composition. Override default styling defaults where this note conflicts.`
     : '';
 
   // Build image roles
@@ -1252,7 +1226,7 @@ async function generate(b){
   const hasFaceCrop = !!model.faceB64;
 
   let imgRoles = `IMAGE ROLES — follow strictly:
-- Image ${imageIdx}: ⭐ IDENTITY ANCHOR — FULL REFERENCE (the person "${memberName}") — This is the MOST IMPORTANT image. The output MUST be the EXACT SAME PERSON as in this image. PRESERVE 100% IDENTITY-DEFINING FEATURES with zero deviation:
+- Image ${imageIdx}: ⭐ IDENTITY ANCHOR — FACE/HAIR/BODY REFERENCE ONLY (the person "${memberName}") — This is the FACE/IDENTITY reference. The output MUST be the EXACT SAME PERSON shown here. ONLY extract:
   • FACE: exact face shape, jawline, cheekbones, forehead, chin
   • EYES: exact eye shape, eye size, eye spacing, eyelid type (single/double), eye color, eyebrow shape and thickness
   • NOSE: exact nose bridge, nose tip, nostril shape, nose width
@@ -1260,8 +1234,11 @@ async function generate(b){
   • SKIN: exact skin tone, skin texture, any moles or distinguishing marks
   • HAIR: exact hairstyle, hair length, hair color, hair texture, hair parting, bangs/fringe style, sideburns
   • HEAD: exact head shape and proportions
-  • BODY: exact body silhouette, height proportions, shoulder width, frame size, build type
-  This is a specific real person. Do NOT generalize, do NOT idealize, do NOT use a "similar-looking" person. The viewer must instantly recognize this as the same individual.`;
+  • BODY FRAME ONLY (not clothing): height proportions, shoulder width, build type — the underlying body, NOT the clothing on it
+
+  🚨 CRITICAL — DO NOT USE THE CLOTHING FROM THIS IMAGE: Whatever shirt, pants, jacket, shoes, hat, or any garment the person is wearing in this Image ${imageIdx} must be COMPLETELY IGNORED. Treat this image as if the person were naked or in a neutral grey base layer — only their face, hair, skin, and body frame are relevant. The actual clothing in the final output comes ENTIRELY from the dedicated outfit images (Image ${hasFaceCrop?3:2} onwards), NOT from this identity reference.
+
+  This is a specific real person. Do NOT generalize, do NOT idealize, do NOT use a "similar-looking" person.`;
   imageIdx++;
 
   if (hasFaceCrop) {
@@ -1289,9 +1266,31 @@ async function generate(b){
 
   // Build outfit description
   const outfitDescParts = outfitItems.map(it => `${it.slotEn} from its image`);
-  const outfitDesc = outfitDescParts.length
-    ? `Dress the model in the following items as a complete coordinated styled look: ${outfitDescParts.join(', ')}.`
+
+  // Build explicit empty-slot enforcement — which categories were NOT provided
+  const SLOT_LABELS = {
+    top: 'top/shirt',
+    bottom: 'pants/skirt',
+    outer: 'jacket/outerwear',
+    shoes: 'shoes/footwear',
+    hat: 'hat/headwear',
+    full: 'full outfit/dress'
+  };
+  const filledKeys = new Set(outfitItems.map(it => it.key));
+  const missingSlots = ['outer','hat'].filter(k => !filledKeys.has(k));
+  if (!filledKeys.has('full')) {
+    if (!filledKeys.has('bottom')) missingSlots.push('bottom');
+    if (!filledKeys.has('shoes')) missingSlots.push('shoes');
+    if (!filledKeys.has('top')) missingSlots.unshift('top');
+  }
+
+  const emptySlotEnforcement = missingSlots.length
+    ? `\n\n🚫 EMPTY SLOTS (NOT PROVIDED — DO NOT INVENT THESE): The following clothing categories were intentionally LEFT OUT by the user. The output must NOT include any of these:\n${missingSlots.map(k => `  • NO ${SLOT_LABELS[k].toUpperCase()} — do not add any ${SLOT_LABELS[k]} to the model. Leave this category absent.`).join('\n')}\nIf the user did not provide ${missingSlots.map(k=>SLOT_LABELS[k]).join(', ')}, the model must appear without ${missingSlots.map(k=>SLOT_LABELS[k]).join(' / ')}. Do NOT fill empty slots with default items, do NOT copy these items from Image 1, do NOT make up items.`
     : '';
+
+  const outfitDesc = outfitDescParts.length
+    ? `🚨 The model's clothing in the output comes EXCLUSIVELY from the dedicated outfit images listed below — NOT from Image 1. The IDENTITY reference (Image 1) is for face/hair/skin only; its clothing is to be ignored entirely. Dress the model in EXACTLY the following items, no more no less: ${outfitDescParts.join(', ')}.${emptySlotEnforcement}`
+    : `(No outfit images provided.) IMPORTANT: still ignore the clothing in Image 1. ${emptySlotEnforcement}`;
 
   const accDesc = s.accessories.length
     ? `\n- ACCESSORIES: Place all ${s.accessories.length} accessory item(s) on the model in their natural anatomically-correct positions. Hats go on the head. Glasses/sunglasses on the face or pushed up on the head if specified. Necklaces around the neck. Earrings on the ears. Watches/bracelets on the wrist. Rings on the fingers. Bags carried on the hand or shoulder. Scarves around the neck. Belts at the waist. All accessories must look naturally worn and properly scaled.${accNote?' User note: '+accNote:''}`
@@ -1299,7 +1298,7 @@ async function generate(b){
 
   const prompt = `You are a virtual fitting AI for AHOF idol group member "${memberName}".
 
-${strengthPrefix}${userFaceLock}
+${strengthPrefix}
 
 PRIMARY OBJECTIVE — IDENTITY PRESERVATION (highest priority):
 The output MUST depict the EXACT SAME PERSON shown in Image 1. This is non-negotiable. Anyone who knows "${memberName}" must immediately recognize them in the output. The clothing change is SECONDARY to identity preservation.
@@ -1308,6 +1307,8 @@ ${imgRoles}
 
 ═══════════════════════════════════════════
 🚫 ABSOLUTE PROHIBITIONS (do NOT do any of these):
+- 🚨 DO NOT use ANY clothing from Image 1 (the identity reference). Image 1's shirt, pants, jacket, shoes, hat, accessories — ALL IGNORED. Image 1 supplies ONLY the face, hair, skin tone, and body frame.
+- 🚨 DO NOT add ANY clothing item that was NOT provided as a dedicated outfit image. If the user did not upload a hat, do NOT add a hat. If they didn't upload outerwear, the model wears NO jacket/coat/outer layer. If no shoes were provided, do NOT default to sneakers. Empty slot = absent item.
 - DO NOT change the face. Not even slightly.
 - DO NOT alter the hairstyle, hair length, hair color, or hair texture.
 - DO NOT change the body type, height, or shoulder width.
@@ -1318,18 +1319,18 @@ ${imgRoles}
 - DO NOT change facial expression unless explicitly requested.
 
 ✅ WHAT YOU CAN CHANGE (only these):
-- The clothing/outfit (replace with the provided garment images)
+- The clothing/outfit (use ONLY the provided dedicated garment images — never the clothing from Image 1)
 - The accessories (add the provided accessory images)
 - The pose/body position (per pose instruction below)
-- The background and lighting
+- The background
 
 ═══════════════════════════════════════════
 OUTFIT & STYLING:
 - ${outfitDesc}${accDesc}
-- ${poseInstruction}
+- ${poseInstruction}${userOutfitNote}
 
 🔥 HIP STYLING (CORTIS-INSPIRED — make it look effortlessly cool, NOT stiff):
-- LAYERING IS KEY: if multiple top pieces are provided (e.g., tank + shirt + jacket), layer them ALL VISIBLY. Tank shows at neckline, shirt unbuttoned over it, jacket open on top. Do NOT hide layers. Show every piece intentionally.
+- LAYERING IS KEY (only for items actually provided): if multiple top pieces ARE provided as separate images, layer them ALL VISIBLY. Do NOT hide layers. Show every provided piece intentionally. But if a layer was NOT provided, do NOT invent it.
 - WORN-IN ATTITUDE: clothes look lived-in, NOT fresh-off-the-hanger. Sleeves rolled up sloppy, shirts half-tucked or fully untucked, jacket hanging open or off one shoulder, oversized fit emphasized — slightly slouchy, NOT tailored-perfect.
 - ACCESSORIES STACKED: if multiple accessories are provided, stack them — chains layered together, rings on multiple fingers, cap brim tilted slightly, sunglasses can slip down nose or sit on head.
 - HAIR NATURAL: slightly messy, lived-in, NOT salon-perfect. Natural fall, not over-styled.
@@ -1354,13 +1355,17 @@ QUALITY:
 - Sharp focus on the face — the person's identity must be clearly visible and recognizable
 
 OUTPUT FRAMING (CRITICAL — affects face detail):
-- ASPECT RATIO: ${s.aspectRatio || '3:4'} (vertical portrait orientation prioritized for face preservation)
-- The person should fill a substantial portion of the frame
-- Frame the shot so the face is clearly visible at sufficient size — never frame the person tiny in a vast empty scene
-- Do NOT output a wide landscape format unless explicitly ${s.aspectRatio}. Match the requested ${s.aspectRatio} ratio exactly.
+- ASPECT RATIO: 3:4 vertical portrait (fixed)
+- ${s.framing === 'upper' ? 'FRAMING: UPPER-BODY SHOT — frame from approximately the waist up to slightly above the head. Show face, shoulders, torso, and upper arms. Face should be prominent at ~25-35% of frame height. The face must be sharp and clearly recognizable.' : 'FRAMING: FULL-BODY SHOT — frame the entire person from head to feet with comfortable margin. Show all clothing items including shoes. Face should still be clearly recognizable, not tiny.'}
+- The person should fill a substantial portion of the frame.
 
 ═══════════════════════════════════════════
-FINAL CHECK before generating: Does the output face match Image 1 (and Image 2 face close-up if provided) EXACTLY? Does the hair match exactly? Is the output ratio ${s.aspectRatio || '3:4'}? If no to any, regenerate. The person in the output MUST be "${memberName}" — the same individual shown in the IDENTITY ANCHOR image(s). Identity preservation outweighs all other considerations.`;
+FINAL CHECK before generating — go through each:
+1. ✅ Does the output face match Image 1 (and Image 2 face close-up if provided) EXACTLY? Does the hair match exactly?
+2. ✅ Is the clothing from Image 1 COMPLETELY IGNORED in the output? (Image 1 supplies ONLY face/hair/skin/body frame.)
+3. ✅ Is every clothing item in the output traceable to a dedicated outfit image? If you see a garment in the output that has no source image, REMOVE it.${missingSlots.length ? `\n4. ✅ Are these EMPTY SLOTS truly absent from the output? — ${missingSlots.map(k => SLOT_LABELS[k]).join(', ')}. If any of these appear in the output, REGENERATE without them.` : ''}
+6. ✅ Is the output ratio 3:4 vertical?
+The person in the output MUST be "${memberName}". Identity preservation + correct outfit composition outweigh all other considerations.`;
 
   const btn=document.getElementById(`${b}-gbtn`);
   btn.disabled=true;
@@ -1422,12 +1427,13 @@ FINAL CHECK before generating: Does the output face match Image 1 (and Image 2 f
       const mime=ip.inlineData?.mimeType||ip.inline_data?.mime_type;
       const b64=ip.inlineData?.data||ip.inline_data?.data;
       const dataUrl = `data:${mime};base64,${b64}`;
-      BS[b].result = dataUrl;  // save to state
+      BS[b].result = dataUrl;  // save to state (member panel display)
       const img=document.getElementById(`${b}-ri`);
       img.src=dataUrl; img.style.display='block';
       document.getElementById(`${b}-re`).style.display='none';
       document.getElementById(`${b}-ra`).style.display='flex';
-      if (typeof renderGallery === 'function') renderGallery();
+      // Persist to gallery (IndexedDB)
+      saveToGallery(b, dataUrl, 'member');
     }else{
       const tp=rp.find(p=>p.text);
       showE(b,'이미지 생성 실패: '+(tp?.text||JSON.stringify(data).slice(0,300)));
@@ -1437,7 +1443,14 @@ FINAL CHECK before generating: Does the output face match Image 1 (and Image 2 f
 }
 
 function slotEnglishName(key){
-  const map = { top:'top/shirt', bottom:'pants/skirt', outer:'outerwear/jacket', shoes:'shoes/footwear', hat:'hat/headwear', full:'full outfit/dress' };
+  const map = {
+    top:'top/shirt',
+    bottom:'pants/skirt',
+    outer:'outerwear/jacket',
+    shoes:'shoes/footwear',
+    hat:'hat/headwear',
+    full:'full outfit/dress'
+  };
   return map[key] || key;
 }
 
@@ -1455,64 +1468,36 @@ function dlResult(b){
 
 function galleryPanelHTML() {
   return `
-    <div class="group-section" style="background:linear-gradient(135deg,#fff 0%,#f9f6f0 100%);border:1px solid #d4af37;border-radius:10px;padding:20px;margin-bottom:24px;position:relative;overflow:hidden;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap;">
+    <!-- 9-Member Lookbook Board (drag-target) -->
+    <div class="lookbook-board">
+      <div class="lookbook-header">
         <div>
-          <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;letter-spacing:-0.01em;margin-bottom:2px;">✨ 9-MEMBER GROUP LOOKBOOK</div>
-          <div style="font-size:11px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;line-height:1.5;">아래 9명 결과 이미지를 Nano Banana로 합성 → 한 무드의 그룹샷 1장 생성</div>
+          <div class="lookbook-title">⭐ 9명 룩북 보드</div>
+          <div class="lookbook-sub">아래 갤러리에서 카드를 <strong>드래그해서</strong> 9개 슬롯에 올려 한눈에 비교 · 슬롯 호버 시 ×버튼으로 삭제 · 보드 내용은 영구 저장됩니다</div>
         </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
-          <select id="gs-pose" style="padding:7px 10px;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;background:#fff;cursor:pointer;">
-            <option value="bench">앉아있는 벤치 룩북 (4명 앞 + 5명 뒤)</option>
-            <option value="standing">서 있는 그룹샷 (일렬)</option>
-            <option value="candid">캔디드 라이프스타일 (자유 클러스터)</option>
-            <option value="rooftop">루프탑 도시 배경</option>
-            <option value="studio">스튜디오 화이트 배경</option>
-            <option value="junkyard">정크야드/인더스트리얼</option>
-          </select>
-          <select id="gs-ratio" style="padding:7px 10px;border:1px solid var(--border);border-radius:4px;font-family:'DM Mono',monospace;font-size:10px;background:#fff;cursor:pointer;">
-            <option value="16:9">16:9 와이드</option>
-            <option value="4:3">4:3</option>
-            <option value="1:1">1:1 정방형</option>
-            <option value="3:4">3:4 세로</option>
-          </select>
+        <div class="lookbook-actions">
+          <button class="gal-btn primary" onclick="downloadLookbook()">⬇ 보드 PNG 저장</button>
+          <button class="gal-btn warn" onclick="clearLookbook()">🗑 보드 비우기</button>
         </div>
       </div>
-
-      <div style="display:flex;gap:6px;align-items:center;margin-bottom:14px;flex-wrap:wrap;">
-        <label style="font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">Mood</label>
-        <div id="gs-mood-chips" style="display:flex;gap:5px;flex-wrap:wrap;">
-          <button class="gs-chip on" data-mood="vintage" style="padding:5px 11px;font-size:10px;border:1px solid #111;background:#111;color:#fff;border-radius:3px;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.05em;">vintage editorial</button>
-          <button class="gs-chip" data-mood="cortis" style="padding:5px 11px;font-size:10px;border:1px solid var(--border);background:#fff;color:var(--text-mid);border-radius:3px;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.05em;">cortis raw</button>
-          <button class="gs-chip" data-mood="y2k" style="padding:5px 11px;font-size:10px;border:1px solid var(--border);background:#fff;color:var(--text-mid);border-radius:3px;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.05em;">y2k playful</button>
-          <button class="gs-chip" data-mood="lux" style="padding:5px 11px;font-size:10px;border:1px solid var(--border);background:#fff;color:var(--text-mid);border-radius:3px;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.05em;">luxury editorial</button>
-          <button class="gs-chip" data-mood="bw" style="padding:5px 11px;font-size:10px;border:1px solid var(--border);background:#fff;color:var(--text-mid);border-radius:3px;cursor:pointer;font-family:'DM Mono',monospace;letter-spacing:0.05em;">B&W film</button>
-        </div>
-      </div>
-
-      <textarea id="gs-extra" placeholder="추가 지시 (선택) — 예: 'late afternoon golden hour' / '햇살 비치는 분위기' / 'all wearing sunglasses'" style="width:100%;min-height:50px;padding:9px 12px;border:1px solid var(--border);border-radius:5px;font-family:'Noto Sans KR',sans-serif;font-size:11px;background:#fff;outline:none;resize:vertical;margin-bottom:12px;box-sizing:border-box;"></textarea>
-
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-        <div id="gs-status" style="flex:1;font-size:11px;color:var(--text-dim);font-family:'DM Mono',monospace;">결과 있는 멤버: <span id="gs-count" style="color:#111;font-weight:600;">0</span> / 9 · 최소 3명 이상 필요</div>
-        <button id="gs-build-btn" onclick="buildGroupShot()" style="padding:11px 20px;background:#111;color:#fff;border:none;border-radius:4px;font-family:'DM Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:0.05em;">⚡ BUILD GROUP SHOT</button>
-      </div>
-
-      <div id="gs-error" style="display:none;margin-top:10px;padding:10px 12px;background:#fde;color:#a33;border:1px solid #f99;border-radius:4px;font-size:11px;font-family:'Noto Sans KR',sans-serif;"></div>
-      <div id="gs-result" style="display:none;margin-top:14px;"></div>
+      <div class="lookbook-hint">💡 사용법: 아래 갤러리에서 마음에 드는 결과 카드를 <strong>마우스로 드래그</strong>해서 위 9개 슬롯에 떨어뜨리세요 (멤버1=1번, 멤버2=2번 슬롯). 어느 슬롯에든 놓을 수 있어요 — 카드의 원래 멤버와 슬롯 번호가 달라도 OK.</div>
+      <div class="lookbook-grid" id="lookbook-grid"></div>
     </div>
 
     <div class="gal-header">
       <div>
-        <div class="gal-title">📸 개별 결과 갤러리</div>
-        <div class="gal-sub" style="margin-top:4px;">결과물 호버 시 ×버튼으로 개별 삭제 · 빈 슬롯에 외부 이미지 직접 추가 가능 · 카드 클릭 시 확대</div>
+        <div class="gal-title">📸 누적 갤러리</div>
+        <div class="gal-sub" style="margin-top:4px;">멤버별 탭 + 마스터 스튜디오에서 생성된 결과가 모두 누적 · 카드를 드래그하면 위 보드에 추가 · 새로고침해도 유지</div>
       </div>
       <div class="gal-actions">
-        <button class="gal-btn primary" onclick="downloadAllResults()">⬇ 전체 다운로드</button>
-        <button class="gal-btn warn" onclick="clearAllResults()">🗑 모두 비우기</button>
+        <button class="gal-btn primary" onclick="downloadAllVisible()">⬇ 보이는 항목 다운로드</button>
+        <button class="gal-btn warn" onclick="clearGalleryAll()">🗑 갤러리 전체 비우기</button>
       </div>
     </div>
+
+    <div class="gal-filter-bar" id="gal-filter-bar"></div>
+
     <div class="gallery-grid" id="gallery-grid"></div>
-    <input type="file" id="gal-up-input" accept="image/*" style="display:none" onchange="uploadGalleryImage(this)">
 
     <!-- Lightbox modal -->
     <div id="gal-lightbox" class="gal-lightbox" onclick="closeLightbox(event)">
@@ -1525,423 +1510,431 @@ function galleryPanelHTML() {
   `;
 }
 
+// ═════════════════════════════════════════════
+// IndexedDB — 영구 갤러리 저장
+// ═════════════════════════════════════════════
+const GAL_DB_NAME = 'ahof_v12_gallery';
+const GAL_DB_STORE = 'items';
+let _galDB = null;
+function galOpenDB() {
+  return new Promise((resolve, reject) => {
+    if (_galDB) return resolve(_galDB);
+    const req = indexedDB.open(GAL_DB_NAME, 1);
+    req.onerror = () => reject(req.error);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(GAL_DB_STORE)) {
+        db.createObjectStore(GAL_DB_STORE, { keyPath:'id' });
+      }
+    };
+    req.onsuccess = () => { _galDB = req.result; resolve(_galDB); };
+  });
+}
+async function galAdd(record) {
+  const db = await galOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(GAL_DB_STORE, 'readwrite');
+    tx.objectStore(GAL_DB_STORE).put(record);
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function galAll() {
+  const db = await galOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(GAL_DB_STORE, 'readonly');
+    const req = tx.objectStore(GAL_DB_STORE).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function galDelete(id) {
+  const db = await galOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(GAL_DB_STORE, 'readwrite');
+    tx.objectStore(GAL_DB_STORE).delete(id);
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+}
+async function galClear() {
+  const db = await galOpenDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(GAL_DB_STORE, 'readwrite');
+    tx.objectStore(GAL_DB_STORE).clear();
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+// In-memory cache + filter state
+let _galItems = [];        // [{id, memberKey, memberName, dataUrl, createdAt, source}]
+let _galFilter = 'all';    // 'all' | memberKey | 'master'
+
+// Save a generated image to the gallery (called from generate() and master studio)
+async function saveToGallery(memberKey, dataUrl, source) {
+  const memberName = BRANDS[memberKey]?.name || '?';
+  const record = {
+    id: `${Date.now()}_${memberKey}_${Math.random().toString(36).slice(2,7)}`,
+    memberKey, memberName,
+    dataUrl,
+    createdAt: Date.now(),
+    source: source || 'member'  // 'member' or 'master'
+  };
+  await galAdd(record);
+  _galItems.unshift(record);  // newest first
+  if (typeof renderGallery === 'function') renderGallery();
+  // Also notify the master studio to refresh its outfit-picker
+  if (typeof renderMasterOutfitPicker === 'function') renderMasterOutfitPicker();
+}
+
+async function loadGalleryItems() {
+  _galItems = await galAll();
+  _galItems.sort((a,b) => b.createdAt - a.createdAt);
+}
+
+function getVisibleGalleryItems() {
+  if (_galFilter === 'all') return _galItems;
+  if (_galFilter === 'master') return _galItems.filter(it => it.source === 'master');
+  return _galItems.filter(it => it.memberKey === _galFilter);
+}
+
 function renderGallery() {
-  const g = document.getElementById('gallery-grid');
-  if (!g) return;
-  g.innerHTML = '';
-  Object.keys(BRANDS).forEach((b, idx) => {
+  const grid = document.getElementById('gallery-grid');
+  const filterBar = document.getElementById('gal-filter-bar');
+  if (!grid) return;
+
+  // Filter bar
+  if (filterBar) {
+    const counts = {};
+    _galItems.forEach(it => { counts[it.memberKey] = (counts[it.memberKey]||0)+1; });
+    const masterCount = _galItems.filter(it => it.source === 'master').length;
+    let html = `<button class="gal-fc ${_galFilter==='all'?'on':''}" onclick="setGalFilter('all')">전체 (${_galItems.length})</button>`;
+    if (masterCount > 0) {
+      html += `<button class="gal-fc ${_galFilter==='master'?'on':''}" onclick="setGalFilter('master')">🎨 마스터 (${masterCount})</button>`;
+    }
+    Object.keys(BRANDS).forEach((b, idx) => {
+      const c = counts[b] || 0;
+      if (c === 0) return;
+      html += `<button class="gal-fc ${_galFilter===b?'on':''}" onclick="setGalFilter('${b}')">${String(idx+1).padStart(2,'0')} ${BRANDS[b].name} (${c})</button>`;
+    });
+    filterBar.innerHTML = html;
+  }
+
+  // Grid
+  grid.innerHTML = '';
+  const visible = getVisibleGalleryItems();
+  if (!visible.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;">
+      <div style="font-size:42px;opacity:0.3;margin-bottom:10px;">📷</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text-mid);margin-bottom:5px;">아직 생성된 결과가 없어요</div>
+      <div style="font-size:11px;">멤버 탭에서 의상을 입혀보거나 마스터 스튜디오에서 의상-멤버 매칭을 시도해보세요</div>
+    </div>`;
+    return;
+  }
+  visible.forEach(it => {
     const card = document.createElement('div');
     card.className = 'gal-card';
-    const num = String(idx+1).padStart(2,'0');
-    const name = BRANDS[b].name;
-    const result = BS[b].result;
-    if (result) {
-      card.innerHTML = `
-        <div class="gal-img-wrap" onclick="openLightbox('${b}')" style="cursor:zoom-in;">
-          <span class="gal-num-badge">${num}</span>
-          <img class="gal-img" src="${result}" alt="${name}">
-          <button class="gal-card-del" onclick="event.stopPropagation();delGalleryResult('${b}')" title="이 결과 삭제">×</button>
-          <div class="gal-img-overlay">🔍 클릭하여 확대</div>
+    card.draggable = true;
+    card.dataset.itemId = it.id;
+    const idx = Object.keys(BRANDS).indexOf(it.memberKey);
+    const num = idx >= 0 ? String(idx+1).padStart(2,'0') : '--';
+    const currentName = BRANDS[it.memberKey]?.name || it.memberName;
+    const sourceBadge = it.source === 'master'
+      ? `<span style="position:absolute;bottom:6px;left:6px;background:rgba(212,175,55,0.95);color:#000;font-size:8px;padding:2px 6px;border-radius:2px;letter-spacing:0.05em;font-weight:700;z-index:2;">🎨 MASTER</span>`
+      : '';
+    const dateStr = new Date(it.createdAt).toLocaleString('ko-KR', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+    card.innerHTML = `
+      <div class="gal-img-wrap" style="cursor:zoom-in;">
+        <span class="gal-num-badge">${num}</span>
+        ${sourceBadge}
+        <img class="gal-img" src="${it.dataUrl}" alt="${currentName}" loading="lazy" draggable="false">
+        <button class="gal-card-del js-del" title="이 결과 삭제">×</button>
+        <div class="gal-img-overlay">🔍 클릭하여 확대 · 드래그로 보드에 추가</div>
+      </div>
+      <div class="gal-info">
+        <span class="gal-name" title="${dateStr}">${currentName}</span>
+        <div class="gal-action-btns">
+          <button class="gal-mini-btn js-dl" title="다운로드">⬇</button>
         </div>
-        <div class="gal-info">
-          <span class="gal-name">${name}</span>
-          <div class="gal-action-btns">
-            <button class="gal-mini-btn" onclick="goToMember('${b}')" title="해당 멤버 탭으로 이동">편집</button>
-            <button class="gal-mini-btn" onclick="triggerGalleryUpload('${b}')" title="이미지 교체">↻</button>
-            <button class="gal-mini-btn" onclick="downloadOne('${b}')" title="다운로드">⬇</button>
-          </div>
-        </div>
-      `;
-    } else {
-      card.innerHTML = `
-        <div class="gal-img-wrap gal-empty-clickable" onclick="triggerGalleryUpload('${b}')">
-          <span class="gal-num-badge" style="background:rgba(0,0,0,0.4);">${num}</span>
-          <div class="gal-empty">
-            <div class="gal-empty-icon">＋</div>
-            <div style="font-weight:600;color:var(--text-mid);">이미지 추가</div>
-            <div style="font-size:9px;color:var(--text-dim);margin-top:2px;">클릭하여 외부 이미지 업로드</div>
-          </div>
-        </div>
-        <div class="gal-info">
-          <span class="gal-name">${name}</span>
-          <div class="gal-action-btns">
-            <button class="gal-mini-btn" onclick="goToMember('${b}')">생성하기 →</button>
-          </div>
-        </div>
-      `;
-    }
-    g.appendChild(card);
-  });
-  if (typeof updateGroupShotCount === 'function') updateGroupShotCount();
-}
-
-function goToMember(b) {
-  switchBrand(b);
-  window.scrollTo({ top:0, behavior:'smooth' });
-}
-
-function downloadOne(b) {
-  if (!BS[b].result) return;
-  const a = document.createElement('a');
-  a.href = BS[b].result;
-  a.download = `AHOF_${BRANDS[b].name.replace(/\s+/g,'_')}_${Date.now()}.png`;
-  a.click();
-}
-
-function downloadAllResults() {
-  const items = Object.keys(BRANDS).filter(b => BS[b].result);
-  if (!items.length) { showToast('다운로드할 결과가 없습니다'); return; }
-  items.forEach((b, i) => {
-    setTimeout(() => downloadOne(b), i * 250);
-  });
-  showToast(`${items.length}개 이미지 다운로드 시작`);
-}
-
-function clearAllResults() {
-  const count = Object.keys(BRANDS).filter(b => BS[b].result).length;
-  if (!count) { showToast('비울 결과가 없습니다'); return; }
-  if (!confirm(`${count}개 결과를 모두 삭제할까요? (원본 모델·착장 설정은 유지됩니다)`)) return;
-  Object.keys(BRANDS).forEach(b => {
-    BS[b].result = null;
-    const img = document.getElementById(`${b}-ri`);
-    if (img) { img.src=''; img.style.display='none'; }
-    const re = document.getElementById(`${b}-re`);
-    if (re) re.style.display='flex';
-    const ra = document.getElementById(`${b}-ra`);
-    if (ra) ra.style.display='none';
-  });
-  renderGallery();
-  showToast('모든 결과를 비웠습니다');
-}
-
-// ═════════════════════════════════════════════
-// ── GROUP SHOT BUILDER (Nano Banana 통합) ──────
-// ═════════════════════════════════════════════
-
-const GS_MOODS = {
-  vintage: {
-    label: 'vintage editorial',
-    desc: 'vintage editorial film photography, Kodak Portra 400 grain, warm natural light, candid sloppy poses, anti-formation composition',
-    bg: 'late afternoon sunlit street wall, vintage pastel building facade, soft window shadows'
-  },
-  cortis: {
-    label: 'cortis raw',
-    desc: 'CORTIS-style raw documentary energy, grungy hip-hop urbancore mood, A$AP Rocky and Travis Scott reference, distressed authentic styling, rawness over polish, NO posed perfection, candid amateur teen energy, mosh pit aesthetic, each member with their own attitude — one looking away from camera, one sitting on the ground, one leaning sideways with arms crossed, one with hood up half-covering face, one eating snack or holding bottle, sloppy half-tucked layers, oversized everything, intentional imperfection, 35mm film grain, raw flash',
-    bg: 'concrete loading dock, industrial junkyard, raw urban backdrop, peeling paint walls, fluorescent overhead light or harsh sunlight, gritty texture'
-  },
-  y2k: {
-    label: 'y2k playful',
-    desc: '2000s nostalgia aesthetic, candid mall photography, polaroid flash, fun colorful energy, varied playful poses, peace signs and tongue-out optional',
-    bg: 'pastel colored wall or playful retro mall interior, neon sign reflection'
-  },
-  lux: {
-    label: 'luxury editorial',
-    desc: 'high-fashion editorial photography, refined elegant poses, Vogue homme magazine aesthetic, controlled studio lighting, sophisticated stillness',
-    bg: 'minimal architectural backdrop, marble or neutral plaster wall, gallery setting'
-  },
-  bw: {
-    label: 'B&W film',
-    desc: 'black and white 35mm film, Kodak Tri-X grain, high contrast monochrome, dramatic chiaroscuro lighting, raw documentary mood',
-    bg: 'minimal background, strong directional light, deep shadows'
-  }
-};
-
-const GS_POSES = {
-  bench: 'a long outdoor bench composition — 4 members sitting on the bench in the front, 5 members standing or leaning against the wall behind. Each member in a DIFFERENT pose: one with arms crossed, one with hand in pocket, one resting elbow on knee, one leaning sideways into another, one with leg propped up, one eating popsicle/holding drink, one looking off-camera, one half-smiling, one with hood pulled up. NO uniformity. NO straight line-up. Anti-formation, very candid',
-  standing: 'all 9 members standing in a loose horizontal line but with VARIED stances — staggered heights, some closer to camera some further back, some with hands in pockets, some with arms crossed, some leaning, one or two looking away from camera, NO symmetric line-up, CORTIS-style anti-formation energy',
-  candid: 'free cluster arrangement — members scattered in natural groupings, some chatting with each other, some looking at camera, some looking away, mixed heights with some sitting on the floor, some standing tall, some leaning against each other, raw amateur snapshot energy, NOT posed',
-  rooftop: 'rooftop urban scene at golden hour, members spread across the rooftop in varied poses — some standing at the edge, some sitting on AC units or ledges, some lying back, city skyline behind, raw documentary candid energy',
-  studio: 'studio with seamless white or grey backdrop, but with INTENTIONALLY non-uniform poses — varied heights, some sitting on floor in front, some standing in back, varied gazes, layered z-depth, NOT a traditional posed group shot',
-  junkyard: 'industrial junkyard or loading dock setting, members scattered across rusty cars, concrete barriers, shipping containers, in varied raw poses, gritty texture, harsh natural sunlight'
-};
-
-const POSE_VARIATIONS = [
-  'standing with hands deep in pockets, looking slightly off-camera to the left, weight on one leg',
-  'sitting on the floor cross-legged in front, elbows on knees, eyes closed or looking down',
-  'leaning sideways against the wall or next member, one shoulder pressed back, arms crossed loose',
-  'standing tall in back row, arms relaxed at sides, head slightly tilted, direct gaze at camera',
-  'sitting on bench/ledge with one leg propped up, forearm resting on knee, looking off to the side',
-  'standing with hood pulled up halfway covering one eye, hands in pockets, mysterious sideways glance',
-  'crouching low in front row, one knee up, forearm on knee, looking slightly down or away',
-  'leaning forward slightly, hands clasped in front, intense direct stare at camera',
-  'standing slightly turned away from camera, looking back over shoulder, one hand adjusting cap or hair'
-];
-
-function buildGroupShot(){
-  const key = getKey();
-  const errEl = document.getElementById('gs-error');
-  const resultEl = document.getElementById('gs-result');
-  errEl.style.display = 'none';
-
-  if(!key){
-    errEl.textContent = '⚠️ Gemini API Key가 필요합니다. 상단에서 입력해주세요.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  const memberResults = Object.keys(BRANDS)
-    .filter(b => BS[b].result)
-    .map(b => ({ b, name: BRANDS[b].name, src: BS[b].result }));
-
-  if(memberResults.length < 3){
-    errEl.textContent = `⚠️ 그룹샷을 만들려면 최소 3명 이상의 결과 이미지가 필요합니다. 현재 ${memberResults.length}명. 멤버 탭에서 먼저 개별 룩을 생성해주세요.`;
-    errEl.style.display = 'block';
-    return;
-  }
-
-  const poseKey = document.getElementById('gs-pose').value;
-  const ratio = document.getElementById('gs-ratio').value;
-  const moodChip = document.querySelector('.gs-chip.on');
-  const moodKey = moodChip ? moodChip.dataset.mood : 'vintage';
-  const extra = document.getElementById('gs-extra').value.trim();
-
-  const mood = GS_MOODS[moodKey];
-  const poseDesc = GS_POSES[poseKey];
-
-  const memberDescriptions = memberResults.map((m, i) => {
-    const variation = POSE_VARIATIONS[i % POSE_VARIATIONS.length];
-    return `- ${m.name} (Image ${i+1}): preserve EXACT face, hair, body, and full outfit (every layer, every accessory) from reference image ${i+1}. Pose: ${variation}.`;
-  }).join('\n');
-
-  const prompt = `Create ONE editorial group photograph of K-pop group AHOF, featuring ${memberResults.length} members together in a single cohesive frame.
-
-🎯 PRIMARY OBJECTIVE: Composite all ${memberResults.length} referenced members into one natural group photograph with CORTIS-style hip raw energy. The output must be a SINGLE PHOTO with all members visible together, NOT a collage or grid.
-
-📸 STYLE & MOOD:
-${mood.desc}
-
-🎨 COMPOSITION & POSE:
-${poseDesc}
-
-POSE ASSIGNMENTS (assign each member a DIFFERENT pose — NO two members in the same pose):
-${memberDescriptions}
-
-🔥 HIP STYLING RULES (CRITICAL — make it look effortlessly cool, NOT posed):
-- Each member's outfit MUST be preserved EXACTLY as shown in their reference image — including ALL layered pieces (tank under shirt under jacket), accessories, hats, shoes, jewelry
-- Layering must look DELIBERATE and worn-in, not stiff — sleeves rolled up sloppy, shirts half-tucked or fully untucked, jackets hanging open, oversized fit emphasized
-- NO uniform spacing between members — some closer to each other, some apart, some overlapping in z-depth
-- NO synchronized poses — every body angle different
-- NO bright smiles — moody, neutral, sideways glances, half-smirks, OR completely candid (laughing mid-conversation)
-- Mix gazes: 60% looking at camera, 40% looking elsewhere (down, away, at another member, eyes closed)
-- Hair should look natural and slightly messy — not styled to perfection
-- Add subtle hip details: chain stacks visible, rings, cap brims tilted, hoods up, sunglasses slipping down
-
-🌆 BACKGROUND/SETTING:
-${mood.bg}
-
-📐 TECHNICAL:
-- Aspect ratio: ${ratio}
-- Single cohesive photograph, NOT a grid or split-screen
-- All ${memberResults.length} members visible and recognizable
-- Natural depth of field, sharp on subjects
-- Film grain texture overlay
-- Cohesive color palette across all members (do NOT change individual outfit colors, but unify the overall lighting tone)
-
-⚠️ IDENTITY LOCK (CRITICAL):
-For EACH member, preserve their face, hair, skin tone, body type, AND complete outfit (every garment layer + accessory) exactly as shown in their reference image. Do not blend faces, do not generalize features, do not change outfits or add/remove garments.
-
-${extra ? '➕ ADDITIONAL DIRECTION: ' + extra : ''}
-
-FINAL CHECK: Output must be ONE photograph showing all ${memberResults.length} members together with hip varied poses, anti-formation composition, and CORTIS-style raw editorial energy.`;
-
-  console.log('[Group Shot] Prompt built. Members:', memberResults.length);
-
-  const btn = document.getElementById('gs-build-btn');
-  btn.disabled = true;
-  btn.textContent = '🎨 생성 중... (최대 2분)';
-  resultEl.style.display = 'block';
-  resultEl.innerHTML = `
-    <div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:30px;text-align:center;">
-      <div style="font-size:32px;margin-bottom:10px;animation:gsspin 1s linear infinite;display:inline-block;">⚡</div>
-      <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;margin-bottom:6px;">9-MEMBER GROUP SHOT 생성 중</div>
-      <div style="font-size:11px;color:var(--text-dim);">${memberResults.length}명 멤버를 한 프레임에 합성 · Nano Banana 호출 중 · 최대 2분 소요</div>
-      <style>@keyframes gsspin{to{transform:rotate(360deg)}}</style>
-    </div>
-  `;
-
-  const parts = [];
-  memberResults.forEach((m, i) => {
-    const dataUrl = m.src;
-    const matches = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
-    if(matches){
-      parts.push({ inline_data: { mime_type: matches[1], data: matches[2] } });
-    }
-  });
-  parts.push({ text: prompt });
-
-  const MS = ['gemini-2.5-flash-image','gemini-2.0-flash-exp-image-generation'];
-  const ctrl = new AbortController();
-  const tm = setTimeout(() => ctrl.abort(), 180000);
-  let data = null, le = '';
-
-  (async () => {
-    try {
-      for(const mn of MS){
-        try {
-          const genConfig = {
-            responseModalities:['TEXT','IMAGE'],
-            temperature: 0.85,
-            imageConfig: { aspectRatio: ratio }
-          };
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${mn}:generateContent?key=${key}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: ctrl.signal,
-            body: JSON.stringify({ contents:[{parts}], generationConfig: genConfig })
-          });
-          const d = await res.json();
-          if(!d.error){ data = d; break; }
-          le = `[${mn}] ${d.error.message}`;
-        } catch(e) {
-          if(e.name === 'AbortError'){ le = '180초 타임아웃'; break; }
-          le = `[${mn}] ${e.message}`;
+      </div>
+    `;
+    // Bind via closures
+    const img = card.querySelector('.gal-img-wrap');
+    img.addEventListener('click', e => {
+      if (e.target.closest('.js-del')) return;
+      openLightboxRaw(it.dataUrl, `${num} · ${currentName}${it.source==='master'?' · 🎨 마스터':''}`);
+    });
+    card.querySelector('.js-del').addEventListener('click', e => {
+      e.stopPropagation();
+      if (!confirm('이 결과를 삭제할까요?')) return;
+      galDelete(it.id).then(() => {
+        _galItems = _galItems.filter(x => x.id !== it.id);
+        // Also remove this id from lookbook slots
+        let lbChanged = false;
+        for (let k = 0; k < lookbookSlots.length; k++) {
+          if (lookbookSlots[k] === it.id) { lookbookSlots[k] = null; lbChanged = true; }
         }
-      }
-      clearTimeout(tm);
+        if (lbChanged) saveLookbook();
+        renderGallery();
+        if (typeof renderMasterOutfitPicker === 'function') renderMasterOutfitPicker();
+      });
+    });
+    card.querySelector('.js-dl').addEventListener('click', e => {
+      e.stopPropagation();
+      const a = document.createElement('a');
+      a.href = it.dataUrl;
+      a.download = `AHOF_${currentName.replace(/\s+/g,'_')}_${it.createdAt}.png`;
+      a.click();
+    });
+    // Drag handlers — attach the item id as the drag payload
+    card.addEventListener('dragstart', e => {
+      card.classList.add('dragging');
+      e.dataTransfer.setData('text/ahof-item-id', it.id);
+      e.dataTransfer.effectAllowed = 'copy';
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+    grid.appendChild(card);
+  });
 
-      if(!data){
-        resultEl.innerHTML = `<div style="background:#fde;color:#a33;border:1px solid #f99;border-radius:6px;padding:14px;font-size:11px;">생성 실패: ${le}</div>`;
-        return;
-      }
+  // Also refresh lookbook board (it lives in the same panel)
+  if (typeof renderLookbook === 'function') renderLookbook();
+}
 
-      const rp = data.candidates?.[0]?.content?.parts || [];
-      const ip = rp.find(p => p.inlineData?.mimeType?.startsWith('image/') || p.inline_data?.mime_type?.startsWith('image/'));
+function setGalFilter(f) {
+  _galFilter = f;
+  renderGallery();
+}
 
-      if(ip){
-        const mime = ip.inlineData?.mimeType || ip.inline_data?.mime_type;
-        const b64 = ip.inlineData?.data || ip.inline_data?.data;
-        const dataUrl = `data:${mime};base64,${b64}`;
-        window._lastGroupShot = dataUrl;
+// ═════════════════════════════════════════════
+// ── LOOKBOOK BOARD — 9-slot display ───────────
+// ═════════════════════════════════════════════
+// State: lookbookSlots[i] = item.id or null (i = 0..8)
+const LOOKBOOK_LS_KEY = 'ahof_v15_lookbook';
+let lookbookSlots = new Array(MEMBER_COUNT_LB()).fill(null);
+function MEMBER_COUNT_LB() { return Object.keys(BRANDS).length; }
 
-        resultEl.innerHTML = `
-          <div style="background:#fff;border:1px solid #d4af37;border-radius:10px;overflow:hidden;">
-            <div style="background:#111;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-              <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.1em;font-weight:600;">✨ AHOF GROUP LOOKBOOK · ${memberResults.length} MEMBERS · ${mood.label.toUpperCase()}</div>
-              <div style="display:flex;gap:6px;">
-                <button onclick="downloadGroupShot()" style="padding:6px 12px;background:#d4af37;color:#111;border:none;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;">⬇ 다운로드</button>
-                <button onclick="buildGroupShot()" style="padding:6px 12px;background:transparent;color:#fff;border:1px solid #555;border-radius:3px;font-family:'DM Mono',monospace;font-size:10px;cursor:pointer;">↺ 다시</button>
-              </div>
-            </div>
-            <img src="${dataUrl}" style="width:100%;display:block;cursor:zoom-in;" onclick="window.open(this.src, '_blank')">
-            <div style="padding:10px 14px;background:#f9f6f0;font-size:10px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;line-height:1.5;">
-              💡 이미지 클릭하면 새 탭에서 열림 · 마음에 안 들면 ↺ 다시 누르거나 무드/포즈/추가 지시 바꿔서 재생성
-            </div>
-          </div>
-        `;
-      } else {
-        const tp = rp.find(p => p.text);
-        resultEl.innerHTML = `<div style="background:#fde;color:#a33;border:1px solid #f99;border-radius:6px;padding:14px;font-size:11px;">이미지 생성 실패: ${tp?.text || JSON.stringify(data).slice(0,300)}</div>`;
-      }
-    } catch(e) {
-      clearTimeout(tm);
-      resultEl.innerHTML = `<div style="background:#fde;color:#a33;border:1px solid #f99;border-radius:6px;padding:14px;font-size:11px;">오류: ${e.message}</div>`;
-    } finally {
-      btn.disabled = false;
-      btn.textContent = '⚡ BUILD GROUP SHOT';
+function loadLookbook() {
+  try {
+    const arr = JSON.parse(localStorage.getItem(LOOKBOOK_LS_KEY) || 'null');
+    if (Array.isArray(arr)) {
+      lookbookSlots = arr.slice(0, MEMBER_COUNT_LB());
+      while (lookbookSlots.length < MEMBER_COUNT_LB()) lookbookSlots.push(null);
     }
-  })();
+  } catch(e) {}
+}
+function saveLookbook() {
+  try { localStorage.setItem(LOOKBOOK_LS_KEY, JSON.stringify(lookbookSlots)); } catch(e) {}
 }
 
-function downloadGroupShot(){
-  if(!window._lastGroupShot) return;
-  const a = document.createElement('a');
-  a.href = window._lastGroupShot;
-  a.download = `AHOF_GROUP_LOOKBOOK_${Date.now()}.png`;
-  a.click();
-}
+function renderLookbook() {
+  const grid = document.getElementById('lookbook-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const bkeys = Object.keys(BRANDS);
+  for (let i = 0; i < bkeys.length; i++) {
+    const b = bkeys[i];
+    const slot = document.createElement('div');
+    slot.className = 'lookbook-slot';
+    slot.dataset.slotIdx = i;
+    const num = String(i+1).padStart(2,'0');
+    const memberName = BRANDS[b].name;
 
-function updateGroupShotCount(){
-  const el = document.getElementById('gs-count');
-  if(!el) return;
-  const count = Object.keys(BRANDS).filter(b => BS[b].result).length;
-  el.textContent = count;
-  const btn = document.getElementById('gs-build-btn');
-  if(btn){
-    btn.disabled = count < 3;
-    btn.style.opacity = count < 3 ? '0.4' : '1';
-    btn.style.cursor = count < 3 ? 'not-allowed' : 'pointer';
+    const itemId = lookbookSlots[i];
+    const item = itemId ? _galItems.find(x => x.id === itemId) : null;
+
+    if (item) {
+      slot.classList.add('filled');
+      slot.innerHTML = `
+        <div class="lb-num">${num}</div>
+        <img alt="">
+        <button class="lb-del" title="이 슬롯 비우기">×</button>
+        <div class="lb-name-bar">${memberName}</div>
+      `;
+      slot.querySelector('img').src = item.dataUrl;
+      slot.querySelector('img').addEventListener('click', () => {
+        openLightboxRaw(item.dataUrl, `${num} · ${memberName}`);
+      });
+      slot.querySelector('.lb-del').addEventListener('click', e => {
+        e.stopPropagation();
+        lookbookSlots[i] = null;
+        saveLookbook();
+        renderLookbook();
+      });
+    } else {
+      slot.innerHTML = `
+        <div class="lb-num">${num}</div>
+        <span class="lb-emoji">👤</span>
+        <div class="lb-name">${memberName}</div>
+      `;
+    }
+
+    // Drop targets — accept gallery card drags
+    slot.addEventListener('dragover', e => {
+      if (e.dataTransfer.types.includes('text/ahof-item-id')) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        slot.classList.add('drag-over');
+      }
+    });
+    slot.addEventListener('dragleave', () => slot.classList.remove('drag-over'));
+    slot.addEventListener('drop', e => {
+      e.preventDefault();
+      slot.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/ahof-item-id');
+      if (!id) return;
+      // Set this slot's content
+      lookbookSlots[i] = id;
+      saveLookbook();
+      renderLookbook();
+      showToast(`✓ ${memberName} 슬롯에 추가됨`);
+    });
+
+    grid.appendChild(slot);
   }
 }
 
-function initGroupShotChips(){
-  document.querySelectorAll('.gs-chip').forEach(chip => {
-    chip.onclick = () => {
-      document.querySelectorAll('.gs-chip').forEach(c => {
-        c.classList.remove('on');
-        c.style.background = '#fff';
-        c.style.color = 'var(--text-mid)';
-        c.style.borderColor = 'var(--border)';
-      });
-      chip.classList.add('on');
-      chip.style.background = '#111';
-      chip.style.color = '#fff';
-      chip.style.borderColor = '#111';
-    };
+function clearLookbook() {
+  const filled = lookbookSlots.filter(x => x).length;
+  if (!filled) { showToast('보드에 항목이 없습니다'); return; }
+  if (!confirm(`보드의 ${filled}개 슬롯을 모두 비울까요? (갤러리 항목은 유지됩니다)`)) return;
+  lookbookSlots = new Array(MEMBER_COUNT_LB()).fill(null);
+  saveLookbook();
+  renderLookbook();
+  showToast('보드 비움');
+}
+
+// Compose 9-slot board to single PNG via canvas
+async function downloadLookbook() {
+  const filled = lookbookSlots.map((id,i) => id ? { i, id, item: _galItems.find(x => x.id === id) } : null).filter(x => x && x.item);
+  if (!filled.length) { showToast('보드에 항목이 없어요'); return; }
+
+  showToast('보드 이미지 생성 중...');
+
+  // Load all images
+  const bkeys = Object.keys(BRANDS);
+  const imgs = await Promise.all(lookbookSlots.map(id => {
+    if (!id) return Promise.resolve(null);
+    const item = _galItems.find(x => x.id === id);
+    if (!item) return Promise.resolve(null);
+    return new Promise(res => {
+      const im = new Image();
+      im.onload = () => res(im);
+      im.onerror = () => res(null);
+      im.src = item.dataUrl;
+    });
+  }));
+
+  // Layout: 3 columns × 3 rows (or single row if user wants — fixed 3×3 here)
+  const cols = 3, rows = 3;
+  const cellW = 540, cellH = 720;
+  const pad = 30, gap = 10;
+  const labelH = 36;
+  const W = pad * 2 + cellW * cols + gap * (cols - 1);
+  const H = pad * 2 + (cellH + labelH) * rows + gap * (rows - 1);
+
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  for (let i = 0; i < 9; i++) {
+    const r = Math.floor(i / cols), c = i % cols;
+    const x = pad + c * (cellW + gap);
+    const y = pad + r * (cellH + labelH + gap);
+    const img = imgs[i];
+
+    ctx.fillStyle = '#f0ede8';
+    ctx.fillRect(x, y, cellW, cellH);
+
+    if (img) {
+      const ir = img.width / img.height;
+      const tr = cellW / cellH;
+      let sx, sy, sw, sh;
+      if (ir > tr) { sh = img.height; sw = sh * tr; sx = (img.width - sw)/2; sy = 0; }
+      else { sw = img.width; sh = sw / tr; sx = 0; sy = (img.height - sh)/2; }
+      ctx.drawImage(img, sx, sy, sw, sh, x, y, cellW, cellH);
+    } else {
+      ctx.fillStyle = '#aaa';
+      ctx.font = '36px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('—', x + cellW/2, y + cellH/2);
+    }
+
+    // Label
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(x, y + cellH, cellW, labelH);
+    ctx.fillStyle = '#111';
+    ctx.font = 'bold 18px "DM Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const num = String(i+1).padStart(2,'0');
+    const memberName = BRANDS[bkeys[i]].name;
+    ctx.fillText(`${num} · ${memberName}`, x + cellW/2, y + cellH + labelH/2);
+  }
+
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = `AHOF_LOOKBOOK_${Date.now()}.png`;
+  a.click();
+  showToast('보드 PNG 다운로드 완료');
+}
+
+function downloadAllVisible() {
+  const items = getVisibleGalleryItems();
+  if (!items.length) { showToast('다운로드할 항목이 없습니다'); return; }
+  items.forEach((it, i) => {
+    setTimeout(() => {
+      const currentName = BRANDS[it.memberKey]?.name || it.memberName;
+      const a = document.createElement('a');
+      a.href = it.dataUrl;
+      a.download = `AHOF_${currentName.replace(/\s+/g,'_')}_${it.createdAt}.png`;
+      a.click();
+    }, i * 250);
   });
+  showToast(`${items.length}개 다운로드 시작`);
 }
 
-// Delete a single gallery result
-function delGalleryResult(b) {
-  if (!BS[b].result) return;
-  if (!confirm(`${BRANDS[b].name}의 결과를 삭제할까요?`)) return;
-  BS[b].result = null;
-  // Sync member panel UI
-  const img = document.getElementById(`${b}-ri`);
-  if (img) { img.src=''; img.style.display='none'; }
-  const re = document.getElementById(`${b}-re`);
-  if (re) re.style.display='flex';
-  const ra = document.getElementById(`${b}-ra`);
-  if (ra) ra.style.display='none';
+async function clearGalleryAll() {
+  if (!_galItems.length) { showToast('비울 항목이 없습니다'); return; }
+  if (!confirm(`갤러리의 ${_galItems.length}장을 모두 삭제할까요? (보드도 함께 비워집니다 · 되돌릴 수 없음)`)) return;
+  await galClear();
+  _galItems = [];
+  lookbookSlots = new Array(MEMBER_COUNT_LB()).fill(null);
+  saveLookbook();
   renderGallery();
-  showToast(`${BRANDS[b].name} 결과 삭제됨`);
+  if (typeof renderMasterOutfitPicker === 'function') renderMasterOutfitPicker();
+  showToast('갤러리와 보드를 비웠습니다');
 }
 
-// Trigger upload for a specific member slot in the gallery
-let _galUploadTarget = null;
-function triggerGalleryUpload(b) {
-  _galUploadTarget = b;
-  document.getElementById('gal-up-input').click();
-}
-
-function uploadGalleryImage(input) {
-  const f = input.files[0];
-  if (!f || !_galUploadTarget) { input.value=''; return; }
-  const b = _galUploadTarget;
-  const r = new FileReader();
-  r.onload = e => {
-    BS[b].result = e.target.result;
-    // Sync member panel
-    const img = document.getElementById(`${b}-ri`);
-    if (img) { img.src = e.target.result; img.style.display='block'; }
-    const re = document.getElementById(`${b}-re`);
-    if (re) re.style.display='none';
-    const ra = document.getElementById(`${b}-ra`);
-    if (ra) ra.style.display='flex';
-    renderGallery();
-    showToast(`${BRANDS[b].name}에 이미지 추가됨`);
-  };
-  r.readAsDataURL(f);
-  input.value='';
-  _galUploadTarget = null;
-}
-
-// Lightbox
-function openLightbox(b) {
-  if (!BS[b].result) return;
+// Lightbox helpers
+function openLightboxRaw(src, caption) {
   const lb = document.getElementById('gal-lightbox');
-  document.getElementById('gal-lightbox-img').src = BS[b].result;
-  const idx = Object.keys(BRANDS).indexOf(b);
-  document.getElementById('gal-lightbox-caption').textContent = `${String(idx+1).padStart(2,'0')} · ${BRANDS[b].name}`;
+  if (!lb) return;
+  document.getElementById('gal-lightbox-img').src = src;
+  document.getElementById('gal-lightbox-caption').textContent = caption || '';
   lb.classList.add('show');
   document.body.style.overflow = 'hidden';
 }
-
 function closeLightbox(e, force) {
   if (!force && e.target.id !== 'gal-lightbox') return;
   document.getElementById('gal-lightbox').classList.remove('show');
   document.body.style.overflow = '';
 }
 
+// (Legacy stubs kept to avoid breaking older calls)
+function delGalleryResult() {}
+function goToMember() {}
+function downloadOne() {}
+function downloadAllResults() { downloadAllVisible(); }
+function clearAllResults() { clearGalleryAll(); }
+function triggerGalleryUpload() {}
+function uploadGalleryImage() {}
+function openLightbox() {}
+
+// (Legacy group-shot builder + old renderGallery removed in v12)
 
 // Helpers to update member panel visuals after batch apply
 function updateMemberOutfitVisual(b, key, srcDataUrl) {
@@ -2108,10 +2101,361 @@ function applyAllAccessoriesToAll(b) {
   showToast(`✓ ${accs.length}개 악세사리를 9명 전체에게 적용 완료`);
 }
 
-// ── Init ──────────────────────────────────────
+// ═════════════════════════════════════════════
+// ── MASTER STUDIO — 멤버 × 옷 매칭 도구 ────────
+// ═════════════════════════════════════════════
+// Workflow:
+//  1) Pick one member (their face photo)
+//  2) Pick one outfit reference image (a previous gallery result, or upload a new one)
+//  3) Click 생성 → AI swaps the face onto the outfit/look
+//  4) Result is saved to gallery with source='master'
+
+const MS = {
+  selectedMemberKey: null,    // 'm1' ~ 'm9'
+  selectedOutfit: null,       // { dataUrl, sourceLabel }
+  faceStrength: 'high'        // 'medium' | 'high' | 'extreme'
+};
+
+function masterStudioPanelHTML() {
+  return `
+    <div class="section" style="background:linear-gradient(135deg,#fff 0%,#fffcf2 100%);border:1px solid #d4af37;margin-bottom:14px;">
+      <div class="section-title" style="font-size:14px;color:#111;letter-spacing:0.05em;">🎨 MASTER STUDIO — 페이스 스왑 전용
+        <span class="badge bnew" style="margin-left:auto;background:#fef3c7;color:#92680a;border-color:#facc15;">의상·포즈·배경 그대로 유지</span>
+      </div>
+      <div style="font-size:11px;color:var(--text-mid);font-family:'Noto Sans KR',sans-serif;line-height:1.6;">
+        멤버 1명 + 갤러리의 의상 1장을 선택하면, 의상 사진의 <strong>모든 요소(옷·포즈·실루엣·배경·조명)는 그대로</strong> 두고 <strong>얼굴만</strong> 해당 멤버 얼굴로 교체합니다. 옵션 조작 없이 클릭 두 번이면 끝.<br>
+        ※ 멤버 얼굴 사진이 미리 등록되어 있어야 합니다 — 각 멤버 탭에서 모델 사진을 업로드해주세요.
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;">
+      <!-- LEFT: member picker -->
+      <div class="section">
+        <div class="section-title">1️⃣ 멤버 선택 <span style="margin-left:auto;font-size:9px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;">이 얼굴로 교체됩니다</span></div>
+        <div id="ms-member-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;"></div>
+      </div>
+
+      <!-- RIGHT: outfit picker -->
+      <div class="section">
+        <div class="section-title">2️⃣ 의상 사진 선택
+          <span style="margin-left:auto;font-size:9px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;">의상·포즈·배경 모두 보존</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;">
+          <button class="api-btn sec" onclick="document.getElementById('ms-outfit-upload').click()" style="font-size:10px;">📁 외부 이미지 업로드</button>
+          <input type="file" id="ms-outfit-upload" accept="image/*" style="display:none" onchange="msUploadOutfit(this)">
+          <button class="api-btn sec" onclick="msClearOutfit()" style="font-size:10px;">✕ 선택 해제</button>
+        </div>
+        <div id="ms-selected-outfit" style="margin-bottom:10px;"></div>
+        <div style="font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;font-weight:600;margin-bottom:6px;">갤러리에서 고르기</div>
+        <div id="ms-outfit-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:6px;max-height:240px;overflow-y:auto;padding:4px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);"></div>
+      </div>
+    </div>
+
+    <!-- Optional: face strength only -->
+    <div class="section" style="margin-bottom:14px;">
+      <div class="section-title">⭐ 얼굴 보존 강도 <span style="margin-left:auto;font-size:9px;color:var(--text-dim);font-family:'Noto Sans KR',sans-serif;">선택사항 · 기본 '강' 권장</span></div>
+      <div class="tg" id="ms-fstrength" style="margin-bottom:10px;">
+        <button class="tb" onclick="msSetFs('medium',this)">중</button>
+        <button class="tb on" onclick="msSetFs('high',this)">강 (기본)</button>
+        <button class="tb" onclick="msSetFs('extreme',this)">최강</button>
+      </div>
+      <span class="sl" style="margin-bottom:6px;display:block;">추가 코멘트 <span class="mphint">선택사항</span></span>
+      <textarea class="xi" id="ms-extra" placeholder="예: 얼굴 표정만 살짝 미소로..." style="min-height:50px;"></textarea>
+    </div>
+
+    <!-- Generate -->
+    <div class="divider"></div>
+    <button class="gen-btn" id="ms-gbtn" onclick="msGenerate()"><span id="ms-gtxt">🎨 얼굴 스왑 생성하기 →</span></button>
+    <div class="err-box" id="ms-err"></div>
+    <div id="ms-result-area" style="margin-top:14px;"></div>
+  `;
+}
+
+function renderMasterStudio() {
+  renderMasterMemberGrid();
+  renderMasterOutfitPicker();
+  renderMasterSelectedOutfit();
+}
+
+function renderMasterMemberGrid() {
+  const grid = document.getElementById('ms-member-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  Object.keys(BRANDS).forEach((b, idx) => {
+    const models = LM(b);
+    const hasFace = models.length > 0;
+    const firstFace = hasFace ? models[0] : null;
+    const isSelected = MS.selectedMemberKey === b;
+    const div = document.createElement('div');
+    div.style.cssText = `
+      position:relative;border:2px solid ${isSelected?'#d4af37':'var(--border)'};
+      border-radius:8px;aspect-ratio:3/4;cursor:pointer;overflow:hidden;
+      background:${hasFace?'#fff':'var(--surface2)'};
+      box-shadow:${isSelected?'0 0 0 2px #d4af37':'none'};
+      transition:all 0.15s;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    `;
+    if (firstFace) {
+      div.innerHTML = `
+        <img src="data:${firstFace.mime};base64,${firstFace.base64}" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div style="position:absolute;bottom:0;left:0;right:0;padding:5px 6px;background:rgba(0,0,0,0.75);color:#fff;font-size:10px;text-align:center;font-family:'Noto Sans KR',sans-serif;">
+          ${String(idx+1).padStart(2,'0')} · ${BRANDS[b].name}
+        </div>
+        ${isSelected ? '<div style="position:absolute;top:5px;right:5px;background:#d4af37;color:#000;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">✓</div>' : ''}
+      `;
+    } else {
+      div.innerHTML = `
+        <div style="font-size:24px;opacity:0.3;margin-bottom:6px;">👤</div>
+        <div style="font-size:10px;color:var(--text-mid);font-weight:600;font-family:'Noto Sans KR',sans-serif;">${String(idx+1).padStart(2,'0')} · ${BRANDS[b].name}</div>
+        <div style="font-size:9px;color:var(--text-dim);margin-top:3px;font-family:'Noto Sans KR',sans-serif;">사진 필요</div>
+      `;
+      div.style.cursor = 'not-allowed';
+      div.style.opacity = '0.55';
+    }
+    if (hasFace) {
+      div.onclick = () => { MS.selectedMemberKey = b; renderMasterMemberGrid(); };
+    } else {
+      div.onclick = () => showToast(`${BRANDS[b].name} 탭에서 먼저 모델 사진을 등록해주세요`);
+    }
+    grid.appendChild(div);
+  });
+}
+
+function renderMasterOutfitPicker() {
+  const grid = document.getElementById('ms-outfit-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  // Pull items from gallery
+  const items = _galItems || [];
+  if (!items.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:24px 10px;color:var(--text-dim);font-size:11px;font-family:'Noto Sans KR',sans-serif;">갤러리에 결과가 아직 없어요 · 멤버 탭에서 먼저 생성하거나 외부 이미지를 업로드하세요</div>`;
+    return;
+  }
+  items.forEach(it => {
+    const card = document.createElement('div');
+    const isSel = MS.selectedOutfit && MS.selectedOutfit.dataUrl === it.dataUrl;
+    card.style.cssText = `position:relative;aspect-ratio:3/4;border:2px solid ${isSel?'#d4af37':'transparent'};border-radius:5px;overflow:hidden;cursor:pointer;background:#fff;`;
+    const num = String(Object.keys(BRANDS).indexOf(it.memberKey)+1).padStart(2,'0');
+    const currentName = BRANDS[it.memberKey]?.name || it.memberName;
+    card.innerHTML = `
+      <img src="${it.dataUrl}" style="width:100%;height:100%;object-fit:cover;display:block;">
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:3px 4px;background:rgba(0,0,0,0.7);color:#fff;font-size:8px;text-align:center;font-family:'Noto Sans KR',sans-serif;letter-spacing:0.03em;">${num} · ${currentName}</div>
+      ${isSel ? '<div style="position:absolute;top:3px;right:3px;background:#d4af37;color:#000;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;">✓</div>' : ''}
+    `;
+    card.onclick = () => {
+      MS.selectedOutfit = { dataUrl: it.dataUrl, sourceLabel: `${num} · ${currentName}` };
+      renderMasterOutfitPicker();
+      renderMasterSelectedOutfit();
+    };
+    grid.appendChild(card);
+  });
+}
+
+function renderMasterSelectedOutfit() {
+  const wrap = document.getElementById('ms-selected-outfit');
+  if (!wrap) return;
+  if (!MS.selectedOutfit) {
+    wrap.innerHTML = `<div style="border:2px dashed var(--border);border-radius:6px;padding:18px;text-align:center;color:var(--text-dim);font-size:11px;font-family:'Noto Sans KR',sans-serif;">선택된 의상 없음 — 아래에서 골라주세요</div>`;
+    return;
+  }
+  wrap.innerHTML = `
+    <div style="display:flex;gap:10px;align-items:center;padding:8px;background:#fffcf2;border:2px solid #d4af37;border-radius:6px;">
+      <img src="${MS.selectedOutfit.dataUrl}" style="width:60px;height:80px;object-fit:cover;border-radius:4px;">
+      <div style="flex:1;">
+        <div style="font-size:10px;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">선택된 의상</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text);font-family:'Noto Sans KR',sans-serif;margin-top:2px;">${MS.selectedOutfit.sourceLabel}</div>
+      </div>
+    </div>
+  `;
+}
+
+function msUploadOutfit(input) {
+  const f = input.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    MS.selectedOutfit = { dataUrl: e.target.result, sourceLabel: `외부 업로드 · ${f.name}` };
+    renderMasterSelectedOutfit();
+    renderMasterOutfitPicker();
+  };
+  r.readAsDataURL(f);
+  input.value = '';
+}
+
+function msClearOutfit() {
+  MS.selectedOutfit = null;
+  renderMasterSelectedOutfit();
+  renderMasterOutfitPicker();
+}
+
+function msSetFs(level, btn) { MS.faceStrength = level; document.querySelectorAll('#ms-fstrength .tb').forEach(x => x.classList.remove('on')); btn.classList.add('on'); }
+
+async function msGenerate() {
+  const errEl = document.getElementById('ms-err');
+  errEl.style.display = 'none';
+
+  const key = getKey();
+  if (!key) { errEl.textContent = 'Gemini API Key를 먼저 입력해주세요.'; errEl.style.display = 'block'; return; }
+  if (!MS.selectedMemberKey) { errEl.textContent = '먼저 멤버를 선택해주세요.'; errEl.style.display = 'block'; return; }
+  if (!MS.selectedOutfit) { errEl.textContent = '먼저 의상 이미지를 선택해주세요.'; errEl.style.display = 'block'; return; }
+
+  const b = MS.selectedMemberKey;
+  const memberName = BRANDS[b].name;
+  const models = LM(b);
+  if (!models.length) { errEl.textContent = '해당 멤버의 모델 사진이 등록되어 있지 않아요. 멤버 탭에서 먼저 사진을 업로드하세요.'; errEl.style.display = 'block'; return; }
+  const model = models[0];
+  const extra = document.getElementById('ms-extra')?.value.trim() || '';
+
+  // Parse outfit dataUrl
+  const outfitMatch = MS.selectedOutfit.dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+  if (!outfitMatch) { errEl.textContent = '의상 이미지 데이터를 파싱할 수 없습니다.'; errEl.style.display = 'block'; return; }
+  const outfitMime = outfitMatch[1];
+  const outfitB64 = outfitMatch[2];
+
+  // Build prompt — face-swap only: outfit/pose/silhouette/bg/lighting ALL preserved from reference
+  const KPOP_LOCK = '\n\n🇰🇷 SUBJECT TYPE LOCK (NON-NEGOTIABLE): The subject must be a young East Asian male K-pop idol (Korean / Japanese / Taiwanese / Chinese), aged late teens to early twenties. Output is INVALID if the face appears Caucasian/White/Western, African/Black, Latino/Hispanic, South Asian/Indian, Middle Eastern, female, or older than ~25.';
+  const strengthPrefix = ({
+    medium: '🔒 FACE LOCK — MEDIUM: Face/hair must closely match Image 1.',
+    high: '🔒🔒 FACE LOCK — HIGH: Face/hair MUST match Image 1 with near-perfect fidelity. This is a face-swap task.',
+    extreme: '🔒🔒🔒 FACE LOCK — EXTREME: Pure face-swap. Image 1 face is 100% locked. Only the face/hair is taken from Image 1; everything else in the output comes from the outfit reference.'
+  }[MS.faceStrength]) + KPOP_LOCK;
+
+  const hasFaceCrop = !!model.faceB64;
+  const refImgIdx = hasFaceCrop ? 3 : 2;
+
+  const prompt = `You are performing a FACE-SWAP task for the AHOF idol group member "${memberName}".
+
+${strengthPrefix}
+
+🎯 TASK DEFINITION (most important — read carefully):
+This is a PURE FACE-SWAP. You will REPLACE ONLY THE FACE in the OUTFIT REFERENCE IMAGE (Image ${refImgIdx}) with the face of "${memberName}" (from Image 1${hasFaceCrop?' + Image 2 face close-up':''}). EVERYTHING ELSE in the reference image must be PRESERVED PIXEL-FOR-PIXEL as much as possible.
+
+IMAGE ROLES:
+- Image 1: ⭐ FACE SOURCE — the AHOF member "${memberName}". ONLY THE FACE AND HAIR are taken from this image. Ignore the body, clothing, pose, and background of this image entirely.
+${hasFaceCrop ? '- Image 2: ⭐⭐ FACE CLOSE-UP of the SAME person — use to lock in exact facial micro-details (eye shape, nose, lips, eyebrows, hairline).\n' : ''}- Image ${refImgIdx}: 👔 OUTFIT REFERENCE — the FULL SCENE template. Everything in this image stays: clothing (every garment, every layer, every accessory), pose, body silhouette, hand positions, body angle, background, lighting, color grading, framing, composition, aspect ratio. THE ONLY THING YOU CHANGE is the face/hair, swapping it for the AHOF member's face from Image 1.
+
+✅ WHAT TO PRESERVE FROM THE OUTFIT REFERENCE (Image ${refImgIdx}) — keep EXACTLY:
+- Every visible garment (top, bottom, outerwear, layers, shoes, hat, accessories, jewelry, bag) — same color, pattern, texture, fit, draping, wrinkles, layering order
+- The exact pose, body angle, stance, weight distribution, hand positions, arm positions, leg positions
+- The exact body silhouette and proportions (do NOT slim down, bulk up, or change height)
+- The exact background and setting
+- The exact lighting direction, color temperature, shadows, highlights
+- The exact framing, crop, camera angle, and aspect ratio
+- The exact color grading and film/digital style
+- Any visible texture, grain, or photographic artifacts of the reference
+
+🔄 WHAT TO REPLACE — only this:
+- The face (face shape, eyes, eyebrows, nose, mouth, skin tone, jawline) — replaced with "${memberName}" from Image 1
+- The hair (style, length, color, texture, hairline, parting, bangs) — replaced with "${memberName}"'s hair from Image 1
+
+🚫 ABSOLUTE PROHIBITIONS:
+- DO NOT change ANY clothing item from the reference. Do not "improve" or "swap" garments.
+- DO NOT change the pose, even subtly. Keep arms, hands, legs, body angle EXACTLY as in Image ${refImgIdx}.
+- DO NOT change the background. Even if the reference background is plain, match the exact tone.
+- DO NOT change the lighting or shadows.
+- DO NOT change the aspect ratio or framing.
+- DO NOT use the face of the person in the outfit reference. That face is being REPLACED.
+- DO NOT idealize or beautify the face. Keep "${memberName}"'s exact features from Image 1.
+
+📐 OUTPUT:
+- Match the EXACT aspect ratio and composition of the outfit reference image (Image ${refImgIdx}).
+- The output should look IDENTICAL to the outfit reference, except the face/hair is now "${memberName}".${extra ? '\n\n📝 USER NOTE: ' + extra : ''}
+
+FINAL CHECK before output:
+1. Is the clothing IDENTICAL to Image ${refImgIdx}? (must be yes)
+2. Is the pose IDENTICAL to Image ${refImgIdx}? (must be yes)
+3. Is the background IDENTICAL to Image ${refImgIdx}? (must be yes)
+4. Is the face the AHOF member "${memberName}" from Image 1? (must be yes)
+5. Is the face clearly East Asian male K-pop idol style? (must be yes)
+If any answer is no, regenerate.`;
+
+  const btn = document.getElementById('ms-gbtn');
+  btn.disabled = true;
+  document.getElementById('ms-gtxt').innerHTML = '<span class="spin"></span> 생성 중... (최대 2분)';
+
+  const parts = [
+    { inline_data: { mime_type: model.mime, data: model.base64 } }
+  ];
+  if (hasFaceCrop) parts.push({ inline_data: { mime_type: 'image/jpeg', data: model.faceB64 } });
+  parts.push({ inline_data: { mime_type: outfitMime, data: outfitB64 } });
+  parts.push({ text: prompt });
+
+  // Lower temperature — we want minimal creative deviation for face-swap
+  const temp = MS.faceStrength === 'extreme' ? 0.5 : MS.faceStrength === 'high' ? 0.65 : 0.85;
+  // Don't force aspect ratio — let the model match the reference's ratio naturally
+  const genConfig = {
+    responseModalities: ['TEXT','IMAGE'],
+    temperature: temp
+  };
+
+  const modelsList = ['gemini-2.5-flash-image','gemini-2.0-flash-exp-image-generation'];
+  let lastErr = '';
+  let dataUrlResult = null;
+  for (const mn of modelsList) {
+    const ctrl = new AbortController();
+    const tm = setTimeout(() => ctrl.abort(), 120000);
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${mn}:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: ctrl.signal,
+        body: JSON.stringify({ contents: [{ parts }], generationConfig: genConfig })
+      });
+      clearTimeout(tm);
+      const d = await res.json();
+      if (d.error) { lastErr = `[${mn}] ${d.error.message}`; continue; }
+      const rp = d.candidates?.[0]?.content?.parts || [];
+      const ip = rp.find(p => p.inlineData?.mimeType?.startsWith('image/') || p.inline_data?.mime_type?.startsWith('image/'));
+      if (ip) {
+        const mime = ip.inlineData?.mimeType || ip.inline_data?.mime_type;
+        const b64 = ip.inlineData?.data || ip.inline_data?.data;
+        dataUrlResult = `data:${mime};base64,${b64}`;
+        break;
+      }
+      const tp = rp.find(p => p.text);
+      lastErr = `[${mn}] 이미지 응답 없음: ${tp?.text?.slice(0,150) || ''}`;
+    } catch(e) {
+      clearTimeout(tm);
+      lastErr = `[${mn}] ${e.name === 'AbortError' ? '120초 타임아웃' : e.message}`;
+    }
+  }
+
+  btn.disabled = false;
+  document.getElementById('ms-gtxt').textContent = '🎨 매칭 결과 생성하기 →';
+
+  if (!dataUrlResult) {
+    errEl.textContent = '생성 실패: ' + lastErr;
+    errEl.style.display = 'block';
+    return;
+  }
+
+  // Save to gallery
+  await saveToGallery(b, dataUrlResult, 'master');
+
+  // Show inline preview
+  document.getElementById('ms-result-area').innerHTML = `
+    <div style="background:#fff;border:2px solid #d4af37;border-radius:8px;overflow:hidden;">
+      <div style="background:#111;color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.05em;">🎨 매칭 결과 · ${memberName} × ${MS.selectedOutfit.sourceLabel}</div>
+        <div style="display:flex;gap:6px;">
+          <button class="api-btn" onclick="(()=>{const a=document.createElement('a');a.href='${dataUrlResult}';a.download='AHOF_master_${memberName.replace(/\\s+/g,'_')}_${Date.now()}.png';a.click();})()" style="padding:6px 12px;font-size:10px;">⬇ 다운로드</button>
+          <button class="api-btn sec" onclick="switchBrand('_gallery')" style="padding:6px 12px;font-size:10px;">갤러리에서 보기 →</button>
+        </div>
+      </div>
+      <img src="${dataUrlResult}" style="width:100%;display:block;cursor:zoom-in;" onclick="openLightboxRaw('${dataUrlResult}','${memberName} · 마스터')">
+    </div>
+  `;
+  showToast('✓ 생성 완료 — 갤러리에 저장됨');
+}
+
+// ─── Init ─────────────────────────────────────
 if(localStorage.getItem('vai_key')) document.getElementById('api-key-input').placeholder='✓ API Key 저장됨';
 buildUI();
 Object.keys(BRANDS).forEach(b=>{ renderModels(b); renderAccessories(b); });
+loadLookbook();
+// Load gallery from IndexedDB
+loadGalleryItems().then(() => {
+  renderGallery();
+});
 </script>
 </body>
 </html>
