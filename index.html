@@ -376,7 +376,7 @@ if (checkSavedAuth() || checkSessionAuth()) {
 </div>
 
 <div class="section" style="margin-bottom:16px;">
-  <div class="section-title">🔑 Gemini API Key <span class="badge bg-b">gemini-2.0-flash-preview-image-generation</span></div>
+  <div class="section-title">🔑 Gemini API Key <span class="badge bg-b">gemini-3.1-flash-image</span></div>
   <div class="api-row">
     <input class="api-input" type="password" id="api-key-input" placeholder="Gemini API Key (한 번만 입력하면 저장됨)">
     <button class="api-btn" onclick="saveApiKey()">저장</button>
@@ -1389,7 +1389,7 @@ The person in the output MUST be "${memberName}". Identity preservation + correc
   if (s.poseRef) parts.push({ inline_data:{ mime_type: s.poseRef.mime, data: s.poseRef.base64 } });
   parts.push({ text: prompt });
 
-  const MS=['gemini-2.0-flash-preview-image-generation'];
+  const MS=['gemini-3.1-flash-image'];
   let data=null,le='';
   const ctrl=new AbortController();
   const tm=setTimeout(()=>ctrl.abort(),120000);
@@ -2387,7 +2387,7 @@ If any answer is no, regenerate.`;
     temperature: temp
   };
 
-  const modelsList = ['gemini-2.0-flash-preview-image-generation'];
+  const modelsList = ['gemini-3.1-flash-image'];
   let lastErr = '';
   let dataUrlResult = null;
   for (const mn of modelsList) {
