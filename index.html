@@ -292,7 +292,7 @@
       <label class="auth-label">🔒 Team Password</label>
       <input type="password" class="auth-input" id="auth-pw-input" placeholder="비밀번호 입력..." onkeydown="if(event.key==='Enter')checkAuth()" autofocus>
     </div>
-<button class="api-btn" onclick="if(typeof saveApiKey==='function')saveApiKey()">저장</button>
+<button class="api-btn" onclick="setTimeout(()=>saveApiKey(),0)">저장</button>
     <label class="auth-remember">
       <input type="checkbox" id="auth-remember" checked> 14일간 로그인 유지
     </label>
