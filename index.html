@@ -292,7 +292,7 @@
       <label class="auth-label">🔒 Team Password</label>
       <input type="password" class="auth-input" id="auth-pw-input" placeholder="비밀번호 입력..." onkeydown="if(event.key==='Enter')checkAuth()" autofocus>
     </div>
-<button class="api-btn" onclick="if(typeof saveApiKey==='function')saveApiKey()">저장</button>
+    <button class="auth-btn" onclick="checkAuth()">입장하기 →</button>
     <label class="auth-remember">
       <input type="checkbox" id="auth-remember" checked> 14일간 로그인 유지
     </label>
@@ -377,7 +377,6 @@ function saveApiKey() {
   document.getElementById('api-key-input').placeholder = '✓ API Key 저장됨';
 }
 function getKey() { return localStorage.getItem('vai_key') || document.getElementById('api-key-input').value.trim(); }
-
 </script>
 <div class="header">
   <div class="header-eyebrow">Gemini Vision · Virtual Fitting Studio</div>
@@ -1217,7 +1216,7 @@ async function generate(b){
 
   // Face preservation strength prefix — injected at the very top of the prompt
   // ALWAYS includes the K-pop male idol lock to prevent foreign-looking outputs
-const KPOP_LOCK = '\n\nSUBJECT TYPE: The subject is a young East Asian male K-pop idol in his late teens to early twenties, with smooth youthful skin, idol-style grooming, and contemporary K-pop boy group aesthetic. Preserve the exact ethnic appearance, age, and gender shown in the reference photo.';
+  const KPOP_LOCK = '\\n\\nSUBJECT TYPE: The subject is a young East Asian male K-pop idol in his late teens to early twenties, with smooth youthful skin and idol-style grooming. Preserve the exact appearance shown in the reference photo.';
   const strengthPrefix = ({
     low: '',
     medium: '🔒 IDENTITY LOCK — MEDIUM: The person\'s identity (face, hair, body silhouette) must be preserved with high fidelity to the reference images.',
@@ -1399,7 +1398,7 @@ The person in the output MUST be "${memberName}". Identity preservation + correc
   if (s.poseRef) parts.push({ inline_data:{ mime_type: s.poseRef.mime, data: s.poseRef.base64 } });
   parts.push({ text: prompt });
 
-  const MS=['gemini-3.1-flash-image'];
+  const MS=['gemini-3.1-flash-image','gemini-3.1-flash-image'];
   let data=null,le='';
   const ctrl=new AbortController();
   const tm=setTimeout(()=>ctrl.abort(),120000);
@@ -2322,9 +2321,7 @@ async function msGenerate() {
   const outfitB64 = outfitMatch[2];
 
   // Build prompt — face-swap only: outfit/pose/silhouette/bg/lighting ALL preserved from reference
-  const KPOP_LOCK = '\\n\\nSUBJECT TYPE: The subject is a young East Asian male K-pop idol in his late teens to early twenties. Preserve the exact ethnic appearance, age, and gender shown in the reference photo without alteration.';
-
-
+  const KPOP_LOCK = '\\n\\nSUBJECT TYPE: The subject is a young East Asian male K-pop idol in his late teens to early twenties. Preserve the exact appearance shown in the reference photo.';
   const strengthPrefix = ({
     medium: '🔒 FACE LOCK — MEDIUM: Face/hair must closely match Image 1.',
     high: '🔒🔒 FACE LOCK — HIGH: Face/hair MUST match Image 1 with near-perfect fidelity. This is a face-swap task.',
@@ -2399,7 +2396,7 @@ If any answer is no, regenerate.`;
     temperature: temp
   };
 
-  const modelsList = ['gemini-3.1-flash-image'];
+  const modelsList = ['gemini-3.1-flash-image','gemini-3.1-flash-image'];
   let lastErr = '';
   let dataUrlResult = null;
   for (const mn of modelsList) {
