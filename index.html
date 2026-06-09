@@ -1207,7 +1207,9 @@ async function generate(b){
 
   // Face preservation strength prefix — injected at the very top of the prompt
   // ALWAYS includes the K-pop male idol lock to prevent foreign-looking outputs
-  const KPOP_LOCK = '\n\n🇰🇷 SUBJECT TYPE LOCK (NON-NEGOTIABLE): The subject is a young East Asian male K-pop idol (Korean / Japanese / Taiwanese / Chinese), aged late teens to early twenties. Output MUST be a K-pop boy group idol look. STRICT REJECT criteria — the output is INVALID if the person appears: Caucasian / White / Western, African / Black, Latino / Hispanic, South Asian / Indian, Middle Eastern, female, or older than ~25. The face MUST clearly read as a contemporary East Asian male K-pop idol with smooth youthful skin, idol-style grooming, and idol-industry aesthetic standards. This rule overrides any tendency the model has to "diversify" or "neutralize" the face.';
+  const KPOP_LOCK = '
+
+SUBJECT TYPE: The subject is a young East Asian male K-pop idol in his late teens to early twenties, with smooth youthful skin, idol-style grooming, and contemporary K-pop boy group aesthetic. Preserve the exact ethnic appearance, age, and gender shown in the reference photo.';
   const strengthPrefix = ({
     low: '',
     medium: '🔒 IDENTITY LOCK — MEDIUM: The person\'s identity (face, hair, body silhouette) must be preserved with high fidelity to the reference images.',
@@ -2312,7 +2314,9 @@ async function msGenerate() {
   const outfitB64 = outfitMatch[2];
 
   // Build prompt — face-swap only: outfit/pose/silhouette/bg/lighting ALL preserved from reference
-  const KPOP_LOCK = '\n\n🇰🇷 SUBJECT TYPE LOCK (NON-NEGOTIABLE): The subject must be a young East Asian male K-pop idol (Korean / Japanese / Taiwanese / Chinese), aged late teens to early twenties. Output is INVALID if the face appears Caucasian/White/Western, African/Black, Latino/Hispanic, South Asian/Indian, Middle Eastern, female, or older than ~25.';
+  const KPOP_LOCK = '
+
+SUBJECT TYPE: The subject is a young East Asian male K-pop idol in his late teens to early twenties. Preserve the exact ethnic appearance, age, and gender shown in the reference photo without alteration.';
   const strengthPrefix = ({
     medium: '🔒 FACE LOCK — MEDIUM: Face/hair must closely match Image 1.',
     high: '🔒🔒 FACE LOCK — HIGH: Face/hair MUST match Image 1 with near-perfect fidelity. This is a face-swap task.',
