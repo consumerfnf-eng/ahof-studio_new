@@ -1207,8 +1207,7 @@ async function generate(b){
 
   // Face preservation strength prefix — injected at the very top of the prompt
   // ALWAYS includes the K-pop male idol lock to prevent foreign-looking outputs
-  const KPOP_LOCK = '
-
+const KPOP_LOCK = '\n\nSUBJECT TYPE: The subject is a young East Asian male K-pop idol in his late teens to early twenties, with smooth youthful skin, idol-style grooming, and contemporary K-pop boy group aesthetic. Preserve the exact ethnic appearance, age, and gender shown in the reference photo.';
 SUBJECT TYPE: The subject is a young East Asian male K-pop idol in his late teens to early twenties, with smooth youthful skin, idol-style grooming, and contemporary K-pop boy group aesthetic. Preserve the exact ethnic appearance, age, and gender shown in the reference photo.';
   const strengthPrefix = ({
     low: '',
